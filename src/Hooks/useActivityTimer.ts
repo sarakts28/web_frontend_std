@@ -217,8 +217,6 @@ export const useActivityTimers = () => {
 
       if (activityDate && daysMap.has(activityDate)) {
         daysMap.get(activityDate)?.activities.push(activity);
-      } else {
-        console.warn('Activity has invalid or missing utcDate:', activity);
       }
     });
 

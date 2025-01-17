@@ -22,7 +22,7 @@ export const useAuth = () => {
       }
 
       console.log('Refresh token succeeded. User remains authenticated.');
-      return true;
+      return false;
     }
   };
 

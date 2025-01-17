@@ -1,14 +1,12 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
-import { EndPoints } from '../Utilities/EndPoints';
 
 const { REACT_APP_BASE_URL } = process.env;
 const { NODE_ENV } = process.env;
 
 // Function to create an API client
 export const createApiClient = (
-  authTokenApi?: string,
-  refreshTokenStringApi?: string
+  authTokenApi?: string
 ): {
   get: <T = any>(
     endpoint: string,
@@ -46,48 +44,73 @@ export const createApiClient = (
   });
 
   // Request interceptor to include Authorization header
-  client.interceptors.request.use((config) => {
-    if (NODE_ENV === 'development') {
-      const token = Cookies.get('AccessToken') || authTokenApi; // Get the access token from cookies
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+  client.interceptors.request.use(
+    async (config) => {
+      if (NODE_ENV === 'development') {
+        const token = Cookies.get('AccessToken') || authTokenApi; // Get the access token from cookies
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
       }
+
+      if (
+        config.url === '/api/Authentication/refresh-token-prod' ||
+        config.url === '/api/Authentication/login-prod'
+      ) {
+        return config;
+      }
+
+      try {
+        // Try to refresh token before each request
+        await client.get('/api/Authentication/refresh-token-prod');
+        return config;
+      } catch (error) {
+        Cookies.remove('AccessToken');
+        Cookies.remove('RefreshToken');
+        return Promise.reject(error);
+      }
+    },
+    (error) => {
+      return Promise.reject(error);
     }
-    return config;
-  });
+  );
 
   // Add response interceptors for handling errors
   client.interceptors.response.use(
     (response: AxiosResponse) => response,
     async (error) => {
       const originalRequest = error.config;
-      const refreshToken = Cookies.get('RefreshToken') || refreshTokenStringApi; // Get the refresh token from cookies
+      const refreshToken = Cookies.get('RefreshToken');
+
+      console.log('Error:', error, originalRequest);
 
       // Handle token expiration and refresh
-      if (error.response?.status === 401 && refreshToken) {
+      if (error.response?.status === 401 && NODE_ENV === 'development') {
+        localStorage.clear();
+        return;
+      } else if (
+        error.response?.status === 401 &&
+        NODE_ENV === 'production' &&
+        refreshToken
+      ) {
         try {
-          const response = await axios.post(
-            `${REACT_APP_BASE_URL}${EndPoints.refreshToken}`
+          const response = await client.get(
+            '/api/Authentication/refresh-token-prod'
           );
           const newAccessToken = response.data.accessToken;
+          const newRefreshToken = response.data.refreshToken;
           Cookies.set('AccessToken', newAccessToken);
+          Cookies.set('RefreshToken', newRefreshToken);
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-          return axios(originalRequest);
-        } catch (refreshError) {
-          console.error('Error refreshing token:', refreshError);
-          return Promise.reject(refreshError);
+          return client(originalRequest);
+        } catch (error) {
+          Cookies.remove('AccessToken');
+          Cookies.remove('RefreshToken');
+          return Promise.reject(error);
         }
       }
-
-      // Format and reject the error
-      return Promise.reject({
-        message:
-          error?.response?.data?.message ||
-          error.message ||
-          'An error occurred',
-        status: error?.response?.status,
-        data: error?.response?.data,
-      });
+      return Promise.reject(error);
     }
   );
 

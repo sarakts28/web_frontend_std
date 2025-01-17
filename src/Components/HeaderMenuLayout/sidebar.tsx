@@ -25,7 +25,7 @@ import { useThunkDispatch } from '../../Hooks/useThunkDispatch';
 import { useSelector } from 'react-redux';
 import { getUserData } from '../../Store/Selectors/AuthSelector';
 import { logout } from '../../Store/Thunk/AuthThunk';
-import { logoutApplication } from '../../Store/Reducer/AuthSlice';
+import { resetState } from '../../Store/Reducer/AuthSlice';
 // import { postTimeTracker } from '../../Store/Thunk/TimeTrackerThunk';
 import { MenuItemStyled, AvatarWrapper } from './styled';
 import { getActivityTrackerList } from '../../Store/Thunk/ActivityTrackerThunk';
@@ -69,7 +69,7 @@ const MenuBar: React.FC = () => {
     if (itemText === 'logout') {
       setTimeout(() => {
         dispatch(logout({ email: currentUserData?.email }));
-        dispatch(logoutApplication());
+        dispatch(resetState());
         persistor.purge();
         showToast('success', 'Successfully logged out');
       }, 1000);

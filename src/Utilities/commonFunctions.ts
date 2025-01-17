@@ -45,8 +45,7 @@ export const unWrapReponse = (response: any) => {
 
 export const getApiClient = (state: any) => {
   const accessToken = getAccessToken(state);
-  const refreshToken = getRefreshToken(state);
-  return createApiClient(accessToken, refreshToken);
+  return createApiClient(accessToken);
 };
 
 export const generateColor = (input?: string) => {

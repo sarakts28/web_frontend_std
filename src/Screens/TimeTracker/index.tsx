@@ -44,7 +44,7 @@ const TimeTracker = () => {
 
   const renderDayConatiner = (activities: Activity[], isToday: boolean) => {
     return (
-      <>
+      <Box key={generateRandomId(5)} id={generateRandomId(5)}>
         <ActivitListContainer>
           {activities && activities.length > 0 ? (
             activities.map((item: any) => {
@@ -69,7 +69,7 @@ const TimeTracker = () => {
             <Typography sx={GenericStyle.font14Bold}>{t('AddMore')}</Typography>
           </AddMoreContainer>
         )}
-      </>
+      </Box>
     );
   };
 
