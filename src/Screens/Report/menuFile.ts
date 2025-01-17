@@ -169,7 +169,7 @@ export const groupByOptionsToShow = [
 ];
 
 export const groupByKey = (dataArray: any[], groupBy: string) => {
-  const grouped = dataArray.reduce((grouped, item) => {
+  const grouped = dataArray.reduce((groupedItem, item) => {
     let key = '';
 
     if (groupBy === 'date') {
@@ -178,20 +178,22 @@ export const groupByKey = (dataArray: any[], groupBy: string) => {
       const start = startOfWeek(parseISO(item.utcDate), { weekStartsOn: 1 });
       const end = endOfWeek(parseISO(item.utcDate), { weekStartsOn: 1 });
       const dateKey = `${format(start, 'yyyy-MM-dd')} - ${format(end, 'yyyy-MM-dd')}`;
+
       key = dateKey;
     } else {
       key = item[groupBy];
     }
 
-    if (!grouped[key]) {
-      grouped[key] = {
+    if (!groupedItem[key]) {
+      groupedItem[key] = {
         key,
         subItems: [],
       };
     }
-    grouped[key].subItems.push(item);
 
-    return grouped;
+    groupedItem[key].subItems.push(item);
+
+    return groupedItem;
   }, {});
 
   // Convert the grouped object into an array of objects
@@ -223,6 +225,7 @@ export const weekArray = (startDate: Date) => {
 
   return week;
 };
+
 // return week array with duration of each day
 export const weekTimeCalulatesArray = (
   startDate: Date,
@@ -254,6 +257,7 @@ export const weekTimeCalulatesArray = (
 
   week.forEach((item: any) => {
     let totalTime = 0;
+
     dataObjec?.forEach((item2: any) => {
       if (item.day === format(parseISO(item2.utcDate), 'MMM dd')) {
         totalTime += item2.duration;

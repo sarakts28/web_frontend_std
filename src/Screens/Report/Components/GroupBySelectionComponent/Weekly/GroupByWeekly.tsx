@@ -34,6 +34,7 @@ const GroupByWeekly = ({ selectedDate }: GroupByWeeklyProps) => {
 
   const TotalTime = useMemo(() => {
     let time: number = 0;
+
     GroupData.map((item: any) => {
       if (item && item?.subItems?.length > 0)
         item.subItems.map((subItem: any) => {

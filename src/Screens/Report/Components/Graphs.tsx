@@ -41,6 +41,7 @@ const Graphs: React.FC = () => {
     const colorBox = GroupData.map((item: any) => {
       const backgroundColor = generateColorWithAlpha(item.key, 0.2);
       const borderColor = generateColorWithAlpha(item.key, 1);
+
       return { backgroundColor, borderColor };
     });
 

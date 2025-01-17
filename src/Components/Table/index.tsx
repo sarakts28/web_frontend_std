@@ -51,6 +51,7 @@ const CommonTable = <T,>({
 
   const handleSort = (key: keyof T) => {
     const isAsc = sortConfig.key === key && sortConfig.direction === 'asc';
+
     setSortConfig({ key, direction: isAsc ? 'desc' : 'asc' });
   };
 

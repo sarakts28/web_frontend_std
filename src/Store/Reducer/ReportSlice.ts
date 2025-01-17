@@ -58,6 +58,7 @@ const ReportSlice = createSlice({
     },
     setFilter: (state, action: PayloadAction<string[]>) => {
       const newState = { ...state.filters };
+
       if (!action.payload.includes('customer')) newState.customer = [];
       if (!action.payload.includes('context')) newState.context = [];
       if (!action.payload.includes('mainCategory')) {
@@ -65,13 +66,16 @@ const ReportSlice = createSlice({
         newState.subTask = [];
         newState.subDetailedTask = [];
       }
+
       if (!action.payload.includes('subTask')) {
         newState.subTask = [];
         newState.subDetailedTask = [];
       }
+
       if (!action.payload.includes('detailedSubTask')) {
         newState.subDetailedTask = [];
       }
+
       state.filters = { ...newState, filter: action.payload };
     },
     setCustomer: (state, action: PayloadAction<string[]>) => {

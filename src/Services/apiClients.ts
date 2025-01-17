@@ -1,7 +1,9 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const { REACT_APP_BASE_URL } = process.env;
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const { NODE_ENV } = process.env;
 
 // Function to create an API client
@@ -48,9 +50,11 @@ export const createApiClient = (
     async (config) => {
       if (NODE_ENV === 'development') {
         const token = Cookies.get('AccessToken') || authTokenApi; // Get the access token from cookies
+
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
+
         return config;
       }
 
@@ -83,7 +87,7 @@ export const createApiClient = (
       const originalRequest = error.config;
       const refreshToken = Cookies.get('RefreshToken');
 
-      console.log('Error:', error, originalRequest);
+      console.error('Error:', error, originalRequest);
 
       // Handle token expiration and refresh
       if (error.response?.status === 401 && NODE_ENV === 'development') {
@@ -100,16 +104,18 @@ export const createApiClient = (
           );
           const newAccessToken = response.data.accessToken;
           const newRefreshToken = response.data.refreshToken;
+
           Cookies.set('AccessToken', newAccessToken);
           Cookies.set('RefreshToken', newRefreshToken);
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return client(originalRequest);
-        } catch (error) {
+        } catch (err) {
           Cookies.remove('AccessToken');
           Cookies.remove('RefreshToken');
-          return Promise.reject(error);
+          return Promise.reject(err);
         }
       }
+
       return Promise.reject(error);
     }
   );

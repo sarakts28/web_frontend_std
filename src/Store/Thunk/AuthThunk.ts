@@ -4,6 +4,7 @@ import { EndPoints as API_ENDPOINTS } from '../../Utilities/EndPoints';
 import { getApiClient } from '../../Utilities/commonFunctions';
 import axios from 'axios';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const { REACT_APP_BASE_URL } = process.env;
 
 export const loginApplication = createAsyncThunk(
@@ -14,6 +15,7 @@ export const loginApplication = createAsyncThunk(
 
     try {
       const response = await api.post(API_ENDPOINTS.login, payload);
+
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error?.response?.data || error?.message);
@@ -30,7 +32,9 @@ export const logout = createAsyncThunk(
 
     try {
       await api.post(API_ENDPOINTS.logout, payload);
-    } catch (error: any) {}
+    } catch (error: any) {
+      console.error(error);
+    }
   }
 );
 
@@ -46,6 +50,7 @@ export const refreshToken = createAsyncThunk(AuthLogin, async (_, thunkAPI) => {
         },
       }
     );
+
     return response.data;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error?.response?.data || error?.message);

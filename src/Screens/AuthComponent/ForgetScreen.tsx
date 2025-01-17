@@ -1,7 +1,7 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ButtonField, InputField } from '../../Components';
 import { useNavigate } from 'react-router-dom';
-import { useThunkDispatch } from '../../Hooks/useThunkDispatch';
+// import { useThunkDispatch } from '../../Hooks/useThunkDispatch';
 // import { forgetPassword } from '../../Store/Thunk/AuthThunk';
 import {
   ButtonWrapper,
@@ -21,7 +21,6 @@ const ForgetScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const thunkDispatch = useThunkDispatch();
 
   const { t } = useTranslation();
 
@@ -40,6 +39,7 @@ const ForgetScreen = () => {
 
   const isEmailValid = useMemo(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     return emailRegex.test(email);
   }, [email]);
 

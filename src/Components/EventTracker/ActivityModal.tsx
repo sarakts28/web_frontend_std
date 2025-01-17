@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import ActivityList from './ActivityList';
 import { IoAddCircle, IoClose } from 'react-icons/io5';
@@ -23,7 +23,12 @@ interface ActivityModalProps {
   onClose: () => void;
 }
 
-export default function ActivityModal({ onClose }: ActivityModalProps) {
+// const  = () => {
+//   return (  );
+// }
+
+// export default ;
+const ActivityModal = ({ onClose }: ActivityModalProps) => {
   const { activitiesDayArray, addActivityTimer } = useActivityTimers();
 
   const [activityText, setActivityText] = useState<string>('');
@@ -36,7 +41,7 @@ export default function ActivityModal({ onClose }: ActivityModalProps) {
   const currentUserData = useSelector(getUserData);
   const { data } = useData();
 
-  const handleActivList = () => {
+  const handleActivList = useCallback(() => {
     addActivityTimer({
       id: generateRandomId(5),
       customerId: expandedPaths[0].value,
@@ -52,13 +57,19 @@ export default function ActivityModal({ onClose }: ActivityModalProps) {
       utcDate: new Date().toISOString(),
       duration: 0,
     });
-  };
+  }, [
+    addActivityTimer,
+    activityText,
+    currentUserData?.userId,
+    expandedPaths,
+    selectedOptions,
+  ]);
 
   useEffect(() => {
     if (expandedPaths.length > 0) {
       handleActivList();
     }
-  }, [expandedPaths]);
+  }, [expandedPaths, handleActivList]);
 
   return (
     <PaperStyle>
@@ -123,4 +134,6 @@ export default function ActivityModal({ onClose }: ActivityModalProps) {
       </ActivityContainer>
     </PaperStyle>
   );
-}
+};
+
+export default ActivityModal;

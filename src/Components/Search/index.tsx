@@ -62,10 +62,12 @@ const Search = ({
           const filteredResults = options.filter((option) =>
             option.label.toLowerCase().includes(term.toLowerCase())
           );
+
           setResults(filteredResults);
         } else {
           setResults([]);
         }
+
         onSearchTermChange(term); // Notify the parent about the search term
       }, debounceTime),
     [options, minSearchLength, debounceTime, onSearchTermChange]
@@ -73,12 +75,14 @@ const Search = ({
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value;
+
     setSearchTerm(term);
     debouncedSearch(term);
   };
 
   const highlightMatch = (text: string, highlight: string) => {
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+
     return parts.map((part, index) =>
       part.toLowerCase() === highlight.toLowerCase() ? (
         <mark key={index} style={{ backgroundColor: highlightColor }}>
@@ -102,6 +106,8 @@ const Search = ({
 
     if (onCrossIconClick) onCrossIconClick();
   };
+
+
   return (
     <Box sx={customStyles.container}>
       <InputField

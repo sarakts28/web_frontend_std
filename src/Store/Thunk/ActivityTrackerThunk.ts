@@ -20,6 +20,7 @@ const filterString = (filters: any): string => {
       if (filter.key === 'StartDate' && filter.value) {
         return `Date>=${filter.value}`;
       }
+
       if (filter.key === 'EndDate' && filter.value) {
         return `Date<=${filter.value}`;
       }
@@ -28,6 +29,7 @@ const filterString = (filters: any): string => {
         const valueString = filter.value
           .map((item: any) => `${filter.key}=${item}`)
           .join('|');
+
         return valueString;
       }
 
@@ -46,8 +48,10 @@ export const postActivityTracker = createAsyncThunk(
   async (payload: any, thunkAPI) => {
     const state = thunkAPI.getState();
     const api = getApiClient(state);
+
     try {
       const response = await api.post(API_ENDPOINTS.timeTrackerTask, payload);
+
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.data.errors);
@@ -60,8 +64,10 @@ export const updateActivityTracker = createAsyncThunk(
   async (payload: any, thunkAPI) => {
     const state = thunkAPI.getState();
     const api = getApiClient(state);
+
     try {
       const response = await api.put(API_ENDPOINTS.timeTrackerTask, payload);
+
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.data.errors);
@@ -77,6 +83,7 @@ export const getActivityTrackerList = createAsyncThunk<
   const { rejectWithValue, dispatch, getState } = thunkAPI;
   const state = getState();
   const api = getApiClient(state);
+
   try {
     const filter = payload?.filter ? filterString(payload.filter) : {};
     const response = await api.get(API_ENDPOINTS.timeTrackerTask, { filter });
@@ -87,6 +94,7 @@ export const getActivityTrackerList = createAsyncThunk<
   } catch (error: any) {
     const errorMessage =
       error?.response?.data?.message || 'Failed to fetch time tracker list';
+
     return rejectWithValue(errorMessage);
   }
 });
@@ -103,11 +111,13 @@ export const deleteActivityTracker = createAsyncThunk(
       const response = await api.delete(
         `${API_ENDPOINTS.timeTrackerTask}/${payload}`
       );
+
       dispatch(addActivity(response.data?.data));
       return response.data;
     } catch (error: any) {
       const errorMessage =
         error?.response?.data?.message || 'Failed to fetch time tracker list';
+
       return rejectWithValue(errorMessage);
     }
   }

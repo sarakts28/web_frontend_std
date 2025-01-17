@@ -24,8 +24,8 @@ const AvatarComponent = ({
   size = 'medium',
   defaultImageUrl = '/placeholder.svg',
 }: AvatarProps) => {
-  const getInitials = (name: string) => {
-    return name
+  const getInitials = (nameText: string) => {
+    return nameText
       .split(' ')
       .map((word) => word[0])
       .join('')
@@ -33,12 +33,15 @@ const AvatarComponent = ({
       .slice(0, 2);
   };
 
-  const getColorFromName = (name: string) => {
+  const getColorFromName = (useName: string) => {
     let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+
+    for (let i = 0; i < useName.length; i++) {
+      hash = useName.charCodeAt(i) + ((hash << 5) - hash);
     }
+
     const hue = hash % 360;
+
     return `hsl(${hue}, 70%, 60%)`;
   };
 

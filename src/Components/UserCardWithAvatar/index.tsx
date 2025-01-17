@@ -35,6 +35,7 @@ const UserCardWithAvatar = ({
       hour12: false,
     });
   }, [time]);
+
   return (
     <UserCardContainer
       height={cardHeight}

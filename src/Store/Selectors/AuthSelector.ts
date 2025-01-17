@@ -26,6 +26,7 @@ const parseJwt = (token: string): any => {
         .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
         .join('')
     );
+
     return JSON.parse(jsonPayload);
   } catch (error) {
     console.error('Error parsing token:', error);
@@ -34,6 +35,7 @@ const parseJwt = (token: string): any => {
 };
 
 export const getAccessToken = createSelector(authStateSelector, (authState) => {
+  console.log(authState);
   if (process.env.NODE_ENV === 'production') {
     return Cookies.get('AccessToken');
   } else {
@@ -58,6 +60,7 @@ export const getDecodedToken = createSelector(getAccessToken, (accessToken) => {
   } else {
     console.warn('Access token is missing');
   }
+
   return null;
 });
 
@@ -75,11 +78,11 @@ export const getUserData = createSelector(
   }
 );
 
-export const getAuthLoader = createSelector(authStateSelector, (authState) => {
+export const getAuthLoader = createSelector(authStateSelector, () => {
   return false;
 });
 
-export const getAuthError = createSelector(authStateSelector, (authState) => {
+export const getAuthError = createSelector(authStateSelector, () => {
   return false;
 });
 

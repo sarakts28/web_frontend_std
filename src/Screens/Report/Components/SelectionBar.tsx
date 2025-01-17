@@ -24,10 +24,12 @@ const SelectionBar = ({
     const selectedValue = selectionFiltersMenu.find(
       (item: any) => item.value === value
     );
+
     if (!selectedValue) return;
     setSelectionBarDropDown(selectedValue.id);
     setSelectedButton(1);
   };
+
   const screenSize = useMediaQuery('(max-width: 400px)');
 
   return (

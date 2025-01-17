@@ -34,6 +34,7 @@ export const useActivityTimers = () => {
 
   const startTimer = (id: string) => {
     const existingTimer = timers.find((timer) => timer.id === id);
+
     if (existingTimer) {
       dispatch(
         updateTimer({
@@ -56,12 +57,14 @@ export const useActivityTimers = () => {
         paused: false,
         durationInSeconds: null,
       };
+
       dispatch(addTimer(newTimer));
     }
   };
 
   const pauseTimer = (id: string) => {
-    const timer = timers.find((timer) => timer.id === id);
+    const timer = timers.find((singleTimer) => singleTimer.id === id);
+
     if (timer) {
       dispatch(
         updateTimer({
@@ -72,10 +75,11 @@ export const useActivityTimers = () => {
       );
     }
   };
+
   const stopTimer = useCallback(
-    async (id: string, timers: Timer[]) => {
+    async (id: string, timersList: Timer[]) => {
       setInterval(() => {}, 1000);
-      const time = timers.find((timer) => timer.id === id);
+      const time = timersList.find((timer) => timer.id === id);
 
       if (time && time.startTimestamp) {
         dispatch(
@@ -89,7 +93,9 @@ export const useActivityTimers = () => {
           })
         );
 
-        const activity = activities.find((activity) => activity.id === id);
+        const activity = activities.find(
+          (singleActivity) => singleActivity.id === id
+        );
 
         let response: any = {};
 
@@ -103,6 +109,7 @@ export const useActivityTimers = () => {
           context: activity?.context,
           date: new Date().toISOString(),
         };
+
         if (id.length > 5) {
           if (activity && activity.duration) {
             payload = {
@@ -122,6 +129,7 @@ export const useActivityTimers = () => {
           };
           response = await thunkDispatch(postActivityTracker(payload));
         }
+
         if (response?.type?.includes(Rejected)) {
           showToast('error', 'Error while updating activity');
         } else {
@@ -135,6 +143,7 @@ export const useActivityTimers = () => {
             removeActivity(id);
             dispatch(removeTimer(id));
           }
+
           await thunkDispatch(getActivityTrackerList({}));
         }
       }
@@ -157,6 +166,7 @@ export const useActivityTimers = () => {
   const deleteActivityTimer = async (id: string) => {
     if (id.length > 5) {
       const response = await thunkDispatch(deleteActivityTracker(id));
+
       if (response?.type?.includes(Rejected)) {
         showToast('error', 'Id is not valid');
       } else {
@@ -164,6 +174,7 @@ export const useActivityTimers = () => {
 
         await thunkDispatch(getActivityTrackerList({}));
       }
+
       dispatch(removeTimer(id));
     } else {
       dispatch(removeTimer(id));
@@ -178,6 +189,7 @@ export const useActivityTimers = () => {
       console.error('Invalid date value encountered:', date);
       return ''; // Fallback to an empty string or default value
     }
+
     return date.toISOString().split('T')[0];
   };
 
@@ -187,15 +199,18 @@ export const useActivityTimers = () => {
     const todayLocal = new Date(now.getTime() - timezoneOffset);
 
     const yesterdayLocal = new Date(todayLocal);
+
     yesterdayLocal.setDate(todayLocal.getDate() - 1);
 
     const weekStartLocal = new Date(todayLocal);
+
     weekStartLocal.setDate(todayLocal.getDate() - todayLocal.getDay()); // Start of the week (Sunday)
 
     const daysMap = new Map();
 
     for (let i = 0; i < 7; i++) {
       const currentDate = new Date(weekStartLocal.getTime() + i * 86400000); // Add days in milliseconds
+
       daysMap.set(formatUTCDate(currentDate), {
         date: formatUTCDate(currentDate),
         day:

@@ -36,6 +36,7 @@ export const VerticalMenu = ({ menuItems, trigger }: VerticalMenuProps) => {
     if (item.onClick) {
       item.onClick();
     }
+
     handleClose();
   };
 

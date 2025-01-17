@@ -1,7 +1,6 @@
 import { unwrapResult } from '@reduxjs/toolkit';
 import {
   getAccessToken,
-  getRefreshToken,
 } from '../Store/Selectors/AuthSelector';
 import { createApiClient } from '../Services/apiClients';
 
@@ -10,9 +9,11 @@ export const generateRandomId = (length: number) => {
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   const charactersLength = characters.length;
+
   for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
+
   return result;
 };
 
@@ -35,26 +36,32 @@ export const getCurrentTime = (): string => {
   const now = new Date();
   const hours = now.getHours().toString().padStart(2, '0');
   const minutes = now.getMinutes().toString().padStart(2, '0');
+
   return `${hours}:${minutes}`;
 };
 
 export const unWrapReponse = (response: any) => {
   const message = unwrapResult(response);
+
   return message;
 };
 
 export const getApiClient = (state: any) => {
   const accessToken = getAccessToken(state);
+
   return createApiClient(accessToken);
 };
 
 export const generateColor = (input?: string) => {
   if (input) {
     let hash = 0;
+
     for (let i = 0; i < input.length; i++) {
       hash = input.charCodeAt(i) + ((hash << 5) - hash);
     }
+
     const color = `#${((hash >> 0) & 0xffffff).toString(16).padStart(6, '0')}`;
+
     return color;
   } else {
     return `#${Math.floor(Math.random() * 16777215)
@@ -65,6 +72,7 @@ export const generateColor = (input?: string) => {
 
 export const generateColorWithAlpha = (input: string, alpha: number) => {
   let hex = generateColor(input + input.slice(0, 2));
+
   hex = hex.replace('#', '');
 
   const r = parseInt(hex.substring(0, 2), 16);
@@ -85,6 +93,7 @@ export const formatDate = (date: Date): string => {
 export const getValueFromLocalStorage = (key: string, initialValue: string) => {
   try {
     const item = window.localStorage.getItem(key);
+
     return item ? item : initialValue;
   } catch (error) {
     console.error(error);

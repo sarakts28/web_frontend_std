@@ -422,19 +422,26 @@ const useData = () => {
         if (item.value.toLowerCase() === value.toLocaleLowerCase()) {
           return item.label;
         }
+
         if (item.subTasks) {
           const found = recursiveSearch(item.subTasks);
+
           if (found) return found;
         }
+
         if (item.subDetailedTask) {
           const found = recursiveSearch(item.subDetailedTask);
+
           if (found) return found;
         }
+
         if (item.context) {
           const found = recursiveSearch(item.context);
+
           if (found) return found;
         }
       }
+
       return undefined;
     };
 
@@ -445,6 +452,8 @@ const useData = () => {
 
     return result || '';
   };
+
+
   return { data, clients, mainCategoryArray, findLabelByValue, contextArray };
 };
 

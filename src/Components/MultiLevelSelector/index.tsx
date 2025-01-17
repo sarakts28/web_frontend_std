@@ -56,6 +56,7 @@ const MultiLevelSelector = ({
         return '#ffffff';
     }
   };
+
   const handleOptionClick = (
     selectedOption: { value: string; label: string },
     level: number
@@ -114,6 +115,7 @@ const MultiLevelSelector = ({
         (item) => item.level === level && item.value === option.value
       );
       const optionKeys = Object.keys(option);
+
       return (
         <div
           key={option.value}
@@ -197,10 +199,12 @@ const MultiLevelSelector = ({
               const filteredField = field.filter((item) =>
                 item.value?.toLowerCase().includes(term.toLowerCase())
               );
+
               if (filteredField.length > 0) {
                 option[key] = filteredField;
                 return true;
               }
+
               return false;
             }
 
@@ -209,6 +213,7 @@ const MultiLevelSelector = ({
               field.toLowerCase().includes(term.toLowerCase())
             );
           }
+
           return false;
         });
 

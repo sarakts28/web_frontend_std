@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import ChatCard from './ChatCard';
 import { ChatContainer, TypingChatBox } from './ComponentStyle';
@@ -34,6 +34,7 @@ const UserChat = ({ userData, setData, data }: UserChatProps) => {
             messages: [...item.messages, message],
           };
         }
+
         return item;
       });
     });

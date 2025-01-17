@@ -966,7 +966,7 @@ export const dummyEmailData = Array.from({ length: 60 }, (_, index) => ({
   }`,
   Body: `${
     index % 2 === 0
-      ? 'This is a longer message content designed to test how the application handles larger bodies of text in emails. It contains multiple sentences and even some punctuation like commas and periods to ensure robustness in rendering.'
+      ? 'This is a longer message content designed to test how the application handles larger bodies of text in emails.'
       : 'Short message content.'
   }`,
   type: ['inbox', 'sent', 'spam'][index % 3],
@@ -976,7 +976,7 @@ export const dummyEmailData = Array.from({ length: 60 }, (_, index) => ({
   ).padStart(2, '0')}`,
 }));
 
-export interface dummyEmailDataType {
+export interface DummyEmailDataType {
   id: string;
   SenderName: string;
   Subject: string;

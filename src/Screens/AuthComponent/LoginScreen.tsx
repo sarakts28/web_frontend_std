@@ -33,12 +33,14 @@ const LoginPage = () => {
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
+
     setFormData({ ...formData, [name]: value });
   };
 
   const validateForm = useCallback(() => {
     const validationErrors: any = {};
     const loginValidationSchema = getLoginValidationSchema(t);
+
     try {
       loginValidationSchema.validateSync(formData, { abortEarly: false });
     } catch (err: any) {
@@ -46,11 +48,13 @@ const LoginPage = () => {
         validationErrors[error.path] = error.message;
       });
     }
+
     return validationErrors;
   }, [formData, t]);
 
   const handleValidationErrors = () => {
     const validationErrors = validateForm();
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -71,7 +75,8 @@ const LoginPage = () => {
       } else {
         showToast('error', t('loginFailed'));
       }
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       showToast('error', t('loginFailed'));
     }
   };
@@ -80,6 +85,7 @@ const LoginPage = () => {
     const isValidEmail =
       formData.email !== '' && /\S+@\S+\.\S+/.test(formData.email);
     const isEmptyEmail = formData.email === '';
+
     if (isValidEmail) {
       setShowPasswordField(true);
     } else {

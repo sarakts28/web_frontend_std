@@ -29,7 +29,7 @@ const CustomDatePicker = ({
   );
   const [startDate, endDate] = useMemo(() => {
     return [dateRange[0], dateRange[1]];
-  }, [dateRange, selectedDateRange]);
+  }, [dateRange]);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 

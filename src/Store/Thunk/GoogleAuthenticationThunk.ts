@@ -11,10 +11,12 @@ export const getGoogleAuthentication = createAsyncThunk<
   const { rejectWithValue, getState } = thunkAPI;
   const state = getState();
   const api = getApiClient(state);
+
   try {
     const response = await api.get(API_ENDPOINTS.googleAuth);
+
     return response.data;
   } catch (error: any) {
-    return rejectWithValue('Failed to fetch details');
+    return rejectWithValue(error || 'Failed to fetch details');
   }
 });

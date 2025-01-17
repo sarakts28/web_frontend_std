@@ -12,6 +12,7 @@ export const postTimeTracker = createAsyncThunk(
   async (payload: any, thunkAPI) => {
     const state = thunkAPI.getState();
     const api = getApiClient(state);
+
     try {
       const response = await api.post(API_ENDPOINTS.timeTracker, payload);
 
@@ -36,13 +37,15 @@ export const getTimeTrackerList = createAsyncThunk<
   void,
   { rejectValue: string }
 >(TimeTrackerList, async (_, thunkAPI) => {
-  const { rejectWithValue, dispatch, getState } = thunkAPI;
+  const { rejectWithValue, getState } = thunkAPI;
   const state = getState();
   const api = getApiClient(state);
+
   try {
     const response = await api.get(API_ENDPOINTS.timeTracker);
+
     return response.data;
   } catch (error: any) {
-    return rejectWithValue('Failed to fetch time tracker list');
+    return rejectWithValue(error || 'Failed to fetch time tracker list');
   }
 });

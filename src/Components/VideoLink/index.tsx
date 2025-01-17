@@ -32,12 +32,15 @@ const NewVideoLink = () => {
   const handleCreateRoom = async () => {
     showToast('error', 'Failed to create room');
   };
+
   const handleJoinRoom = () => {
     if (!joinRoomId) {
       showToast('error', 'Please enter a valid room ID');
       return;
     }
+
     const newTab = window.open(joinRoomId, '_blank');
+
     if (!newTab) {
       showToast(
         'error',
@@ -53,6 +56,7 @@ const NewVideoLink = () => {
         setRoomId(text);
       },
       (err) => {
+        console.error('Failed to copy text:', err);
         showToast('error', 'Failed to copy text');
       }
     );

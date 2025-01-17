@@ -24,13 +24,13 @@ const EmailModal = ({
     body: '',
   });
 
-  const handleSubmit = () => {
-    handleCloseModal();
-  };
-
   const handleCloseModal = () => {
     setEmailDetail({ recipient: '', subject: '', body: '' });
     handleClose();
+  };
+
+  const handleSubmit = () => {
+    handleCloseModal();
   };
 
   const handleChange = (e: any) => {
@@ -44,9 +44,11 @@ const EmailModal = ({
     const selectedTemplate: SelectionOption | undefined = emailTemplates.find(
       (item: any) => item.value === value
     );
+
     if (!selectedTemplate) {
       return;
     }
+
     setEmailDetail({
       ...emailDetail,
       subject: selectedTemplate?.label,
@@ -107,6 +109,7 @@ const EmailModal = ({
     if (isCompose) {
       return;
     }
+
     if (emailData) {
       setEmailDetail({
         recipient: emailData?.SenderName,
@@ -114,7 +117,7 @@ const EmailModal = ({
         body: emailData?.Body,
       });
     }
-  }, [emailData]);
+  }, [emailData, isCompose]);
 
   return (
     <div>

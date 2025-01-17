@@ -30,7 +30,7 @@ const googleAuthSlice = createSlice({
           state.data = action.payload;
         }
       )
-      .addCase(getGoogleAuthentication.rejected, (state, action) => {
+      .addCase(getGoogleAuthentication.rejected, (state) => {
         state.isLoading = false;
         state.error = 'Failed to fetch details';
       });

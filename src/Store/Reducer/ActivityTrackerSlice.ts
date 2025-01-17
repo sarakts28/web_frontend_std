@@ -41,6 +41,7 @@ const ActivityTimeTrackerSlice = createSlice({
       const index = state.activities.findIndex(
         (activity) => activity.id === action.payload.id
       );
+
       if (index !== -1) {
         state.activities[index] = action.payload;
       }
@@ -61,6 +62,7 @@ const ActivityTimeTrackerSlice = createSlice({
       const index = state.timers.findIndex(
         (timer) => timer.id === action.payload.id
       );
+
       if (index !== -1) {
         state.timers[index] = action.payload;
       }

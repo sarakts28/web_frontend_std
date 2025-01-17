@@ -11,17 +11,21 @@ export const useAuth = () => {
     if (token) {
       return true;
     } else {
-      console.log('Token is missing or invalid. Checking refresh token...');
+      if (process.env.NODE_ENV === 'development') {
+        return false;
+      }
+
+      console.warn('Token is missing or invalid. Checking refresh token...');
       const response: any = await dispatch(refreshToken());
 
       if (response?.type?.includes('rejected')) {
-        console.log(
-          'Refresh token failed. User should be redirected to login.'
+        console.warn(
+          'Refresh token failed. User should be redirected to warnin.'
         );
         return false;
       }
 
-      console.log('Refresh token succeeded. User remains authenticated.');
+      console.warn('Refresh token succeeded. User remains authenticated.');
       return false;
     }
   };

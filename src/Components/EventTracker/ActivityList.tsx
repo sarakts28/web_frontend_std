@@ -20,10 +20,7 @@ interface ActivityListProps {
   currentUserData: any;
 }
 
-export default function ActivityList({
-  activity,
-  currentUserData,
-}: ActivityListProps) {
+const ActivityList = ({ activity, currentUserData }: ActivityListProps) => {
   const {
     timers,
     startTimer,
@@ -76,10 +73,13 @@ export default function ActivityList({
   const onHandleStopTimer = (activeItem: Activity) => {
     stopTimer(activeItem.id, timers);
   };
+
   return (
     <List>
-      {activity.map((activity) => {
-        const currentTimer = timers.find((timer) => timer.id === activity.id);
+      {activity.map((singleActivity: any) => {
+        const currentTimer = timers.find(
+          (timer) => timer.id === singleActivity.id
+        );
         const isRunning =
           currentTimer && !currentTimer.endTimestamp && !currentTimer.paused;
         const isPaused = currentTimer && currentTimer.paused;
@@ -87,12 +87,12 @@ export default function ActivityList({
         const elapsedTime = currentTimer?.durationInSeconds || 0;
 
         return (
-          <ListItem key={activity.id}>
+          <ListItem key={singleActivity.id}>
             <ListItemIcon style={{ minWidth: '30px' }}>
               <LuActivity size={24} />
             </ListItemIcon>
             <ListItemText
-              primary={breakWords(activity.mainCategory)}
+              primary={breakWords(singleActivity.mainCategory)}
               secondary={
                 <>
                   Time Elapsed:{' '}
@@ -115,14 +115,16 @@ export default function ActivityList({
                 <MdStop
                   size={24}
                   color="red"
-                  onClick={() => onHandleStopTimer(activity)}
+                  onClick={() => onHandleStopTimer(singleActivity)}
                 />
               ) : (
-                <IconButton disabled={activity?.customerId ? false : true}>
+                <IconButton
+                  disabled={singleActivity?.customerId ? false : true}
+                >
                   <IoPlay
                     size={24}
-                    color={activity?.customerId ? 'green' : 'grey'}
-                    onClick={() => onHandlePlayTimer(activity)}
+                    color={singleActivity?.customerId ? 'green' : 'grey'}
+                    onClick={() => onHandlePlayTimer(singleActivity)}
                   />
                 </IconButton>
               )}
@@ -130,7 +132,7 @@ export default function ActivityList({
                 <IoPause
                   size={24}
                   color="orange"
-                  onClick={() => pauseTimer(activity.id)}
+                  onClick={() => pauseTimer(singleActivity.id)}
                 />
               ) : null}
               {currentTimer?.durationInSeconds &&
@@ -138,7 +140,7 @@ export default function ActivityList({
                   <BiReset
                     size={24}
                     color="blue"
-                    onClick={() => resetTimer(activity.id)}
+                    onClick={() => resetTimer(singleActivity.id)}
                     title="Reset Timer"
                   />
                 )}
@@ -148,4 +150,6 @@ export default function ActivityList({
       })}
     </List>
   );
-}
+};
+
+export default ActivityList;

@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux';
 import { getUserData } from '../../Store/Selectors/AuthSelector';
 import { useTranslation } from 'react-i18next';
 
-export default function NestedSelect() {
+const NestedSelect = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [selections, setSelections] = useState<number[]>([]);
 
@@ -35,8 +35,10 @@ export default function NestedSelect() {
   const handleSelection = (event: SelectChangeEvent<number>) => {
     const value = event.target.value as number;
     const newSelections = [...selections.slice(0, activeStep), value];
+
     setSelections(newSelections);
   };
+
   const [text, setText] = useState<string>('');
 
   const { addActivityTimer } = useActivityTimers();
@@ -67,6 +69,7 @@ export default function NestedSelect() {
         value: text,
       });
     }
+
     addActivityTimer({
       id: id,
       customerId: '',
@@ -103,6 +106,7 @@ export default function NestedSelect() {
       const selectedCategory = mainCategoryArray.find(
         (item: any) => item.value === selections[1]
       );
+
       return selectedCategory?.subTasks || [];
     }
     //  else if (activeStep === 3) {
@@ -162,7 +166,7 @@ export default function NestedSelect() {
         ]);
       }
     }
-  }, [activeStep, selections, mainCategoryArray, steps]);
+  }, [activeStep, selections, mainCategoryArray, steps, t]);
 
   const getSelectedPath = () => {
     if (selections?.length > 0) {
@@ -170,6 +174,7 @@ export default function NestedSelect() {
         return breakWords(item);
       });
     }
+
     return [];
   };
 
@@ -179,13 +184,13 @@ export default function NestedSelect() {
     } else {
       return !selections[activeStep];
     }
-  }, [activeStep, selections]);
+  }, [activeStep, selections, steps]);
 
   return (
     <Box sx={{ width: '100%', maxWidth: 600, mx: 'auto', mt: 4 }}>
       <Paper elevation={3} sx={{ p: 3 }}>
         <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.map((label, index) => (
+          {steps.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
@@ -298,4 +303,6 @@ export default function NestedSelect() {
       </Paper>
     </Box>
   );
-}
+};
+
+export default NestedSelect;

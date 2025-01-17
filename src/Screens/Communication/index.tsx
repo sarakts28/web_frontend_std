@@ -57,6 +57,7 @@ const Communication = () => {
     const filterData = dummyData.filter((item: any) => {
       return item.name.toLowerCase().includes(search.toLowerCase());
     });
+
     setUserData(filterData);
   }, [search]);
 
@@ -95,7 +96,9 @@ const Communication = () => {
           <SearchBox>
             <SearchContainer>
               <Search
-                onSearchTermChange={(search: string) => setSearch(search)}
+                onSearchTermChange={(searchValue: string) =>
+                  setSearch(searchValue)
+                }
                 onCrossIconClick={() => setSearch('')}
               />
             </SearchContainer>

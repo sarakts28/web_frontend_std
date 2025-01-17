@@ -11,9 +11,12 @@ const PublicLayout = () => {
   useEffect(() => {
     const authenticate = async () => {
       const result = await checkAuth();
+
       setIsAuthenticated(result);
       setLoading(false);
     };
+
+    console.error(isAuthenticated, 'isAuthenticated in public');
 
     authenticate();
   }, [checkAuth]);

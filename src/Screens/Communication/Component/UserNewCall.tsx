@@ -12,6 +12,7 @@ interface UserNewCallProps {
 
 const UserNewCall = ({ callModal }: UserNewCallProps) => {
   const [isCallConnected, setIsCallConnected] = useState(false);
+
   return (
     <>
       <CallContainer>

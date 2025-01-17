@@ -3,7 +3,7 @@ import {
   EmailCardNameContainer,
   EmailCardSubjectContainer,
 } from './ComponentStyle';
-import { dummyEmailDataType } from '../menuFile';
+import { DummyEmailDataType } from '../menuFile';
 import { RxStarFilled } from 'react-icons/rx';
 import { MdStarOutline } from 'react-icons/md';
 import { Box, Typography } from '@mui/material';
@@ -11,9 +11,9 @@ import EmailModal from './EmailModal';
 import { useEffect, useState } from 'react';
 
 interface EmailCardProps {
-  email: dummyEmailDataType;
-  emailData: dummyEmailDataType[];
-  setEmailData: React.Dispatch<React.SetStateAction<dummyEmailDataType[]>>;
+  email: DummyEmailDataType;
+  emailData: DummyEmailDataType[];
+  setEmailData: React.Dispatch<React.SetStateAction<DummyEmailDataType[]>>;
 }
 
 const EmailCard = ({ email, setEmailData, emailData }: EmailCardProps) => {
@@ -37,6 +37,7 @@ const EmailCard = ({ email, setEmailData, emailData }: EmailCardProps) => {
 
   const updateSubjectLength = () => {
     const width = window.innerWidth;
+
     if (width <= 600) {
       setSubjectLength(40);
     } else if (width <= 960) {
@@ -61,6 +62,7 @@ const EmailCard = ({ email, setEmailData, emailData }: EmailCardProps) => {
     email?.Subject?.length > subjectLength
       ? `${email?.Subject.slice(0, subjectLength)}...`
       : email?.Subject;
+
   return (
     <>
       <EmailCardContainer onClick={() => setOpenModal(true)}>

@@ -102,6 +102,7 @@ const Report = () => {
             />
           );
         }
+
         return null;
       })}
       {selectionButton === 1 && (

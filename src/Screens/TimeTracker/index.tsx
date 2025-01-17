@@ -75,6 +75,7 @@ const TimeTracker = () => {
 
   const totalTime = useCallback((activities: Activity[]) => {
     let total = 0;
+
     activities.forEach((item: Activity) => {
       total += item.duration;
     });
@@ -105,6 +106,7 @@ const TimeTracker = () => {
                   </Box>
                 );
               }
+
               return null;
             }
 

@@ -35,9 +35,11 @@ export const useScreenTimeTrack = (location: boolean) => {
           (entry) =>
             entry.id === newEntry.id && entry.timeSpent === newEntry.timeSpent
         );
+
         if (!isDuplicate) {
           return [...prev, newEntry];
         }
+
         return prev;
       });
     }

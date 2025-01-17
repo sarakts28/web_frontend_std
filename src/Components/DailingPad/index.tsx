@@ -53,13 +53,8 @@ const DialingPad = ({ setIsCallConnected }: DialingPadProps) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setInputValue(value);
-  };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleJoinCall();
-    }
+    setInputValue(value);
   };
 
   const handleJoinCall = () => {
@@ -67,6 +62,12 @@ const DialingPad = ({ setIsCallConnected }: DialingPadProps) => {
       showToast('success', 'Call joined successfully');
       setIsCallConnected(true);
     } else showToast('warning', 'Please enter a valid number');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleJoinCall();
+    }
   };
 
   const renderButton = useCallback(

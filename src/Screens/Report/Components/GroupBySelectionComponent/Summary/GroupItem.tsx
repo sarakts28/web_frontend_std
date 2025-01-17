@@ -30,6 +30,7 @@ const GroupItem = ({
     let title: string = '';
     let color = generateColor();
     let totalNumber: number = 0;
+
     if (data?.subItems?.length > 0) {
       title = breakWords(data?.key);
       totalTime = formatElapsedTime(
@@ -43,6 +44,7 @@ const GroupItem = ({
       totalNumber = 1;
       color = generateColor(title + title.slice(0, 2));
     }
+
     return (
       <Box
         sx={{
@@ -64,6 +66,8 @@ const GroupItem = ({
     dispatch(addReportActivity(item));
     if (setSelectionButton) setSelectionButton(2);
   };
+
+
   return (
     <>
       {groupData.map((data: any) => {

@@ -65,11 +65,13 @@ const CalendarSelection = ({
   const toggleCalendar = () => {
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
+
       setPosition({
         top: rect.bottom + 10,
         left: isSmallScreen ? rect.left : rect.left - 250,
       });
     }
+
     setOpenCalendarPaper(!openCalendarPaper);
   };
 

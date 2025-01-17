@@ -8,7 +8,6 @@ import {
   breakWords,
   formatElapsedTime,
   generateColor,
-  generateRandomId,
 } from '../../../../../Utilities/commonFunctions';
 import WeeklyDuration from './WeeklyDuration';
 import { groupByKey, weekTimeCalulatesArray } from '../../../menuFile';
@@ -74,6 +73,7 @@ const GroupItem = ({ toShow, groupData, selectedDate }: GroupItemProps) => {
       );
       color = generateColor(title + title.slice(0, 2));
     }
+
     return (
       <WeeklyItemContainer>
         <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -91,8 +91,8 @@ const GroupItem = ({ toShow, groupData, selectedDate }: GroupItemProps) => {
     );
   };
 
-  const renderSmallScreenContent = (data: any, toShow: string) => {
-    const datagroup = groupByKey(data, toShow);
+  const renderSmallScreenContent = (data: any, toShowText: string) => {
+    const datagroup = groupByKey(data, toShowText);
 
     return (
       <>
@@ -102,6 +102,7 @@ const GroupItem = ({ toShow, groupData, selectedDate }: GroupItemProps) => {
             item?.subItems || [],
             true
           );
+
           return (
             <AccordionDetailsContainer>
               <WeeklyItemContainer>
@@ -116,14 +117,16 @@ const GroupItem = ({ toShow, groupData, selectedDate }: GroupItemProps) => {
               </WeeklyItemContainer>
 
               <WeeklyBoxSmallContainer>
-                {weekSmallArray.slice(0, 7).map((item: any, index: number) => (
-                  <WeeklyItemSmallContainer
-                    key={`${index}-${item?.day}${index}`}
-                  >
-                    <Typography>{item?.date}</Typography>
-                    <Typography>{item.day}</Typography>
-                  </WeeklyItemSmallContainer>
-                ))}
+                {weekSmallArray
+                  .slice(0, 7)
+                  .map((singleItem: any, index: number) => (
+                    <WeeklyItemSmallContainer
+                      key={`${index}-${singleItem?.day}${index}`}
+                    >
+                      <Typography>{singleItem?.date}</Typography>
+                      <Typography>{singleItem.day}</Typography>
+                    </WeeklyItemSmallContainer>
+                  ))}
               </WeeklyBoxSmallContainer>
             </AccordionDetailsContainer>
           );
@@ -131,6 +134,7 @@ const GroupItem = ({ toShow, groupData, selectedDate }: GroupItemProps) => {
       </>
     );
   };
+
   return (
     <>
       {groupData.map((data: any) => {

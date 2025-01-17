@@ -42,7 +42,7 @@ export default {
       'error',
       { selector: 'variable', format: ['camelCase', 'PascalCase'] },
       { selector: 'typeAlias', format: ['PascalCase'] },
-      { selector: 'interface', format: ['PascalCase, camelCase'] },
+      { selector: 'interface', format: ['PascalCase'] },
       { selector: 'function', format: ['PascalCase'] },
     ],
     'no-unused-vars': 'off',

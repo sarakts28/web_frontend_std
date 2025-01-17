@@ -5,7 +5,7 @@ import { Colors } from '../../../Utilities/Colors';
 import { useTranslation } from 'react-i18next';
 import {
   dummyEmailData,
-  dummyEmailDataType,
+  DummyEmailDataType,
   toggleEmailMenu,
 } from '../menuFile';
 import { IoPencil } from 'react-icons/io5';
@@ -20,12 +20,12 @@ const UserEmail = () => {
   const largeScreen = useMediaQuery('(min-width: 1200px)');
 
   const [emailData, setEmailData] =
-    useState<dummyEmailDataType[]>(dummyEmailData);
+    useState<DummyEmailDataType[]>(dummyEmailData);
 
   const { t } = useTranslation();
 
   useEffect(() => {
-    const filterData = dummyEmailData.filter((item: dummyEmailDataType) => {
+    const filterData = dummyEmailData.filter((item: DummyEmailDataType) => {
       return (
         (item.type === 'inbox' && toggle === 1) ||
         (item.type === 'sent' && toggle === 2) ||
@@ -60,7 +60,7 @@ const UserEmail = () => {
         </UserEmailSelectionContainer>
         <Box sx={{ mt: 2, width: 'auto' }}>
           {emailData &&
-            emailData.map((item: dummyEmailDataType, index: any) => (
+            emailData.map((item: DummyEmailDataType, index: any) => (
               <EmailCard
                 key={index}
                 email={item}

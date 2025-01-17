@@ -11,11 +11,11 @@ const Profile = () => {
   const handleGoogleSignIn = async () => {
     // showToast('success', 'Sign in with Google clicked');
     const response: any = await disptach(getGoogleAuthentication());
+
     if (response?.type?.includes(Fullfiled)) {
       const newWindow = window.open('', '_blank');
-      if (newWindow)
-        newWindow.location.href =
-          'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&response_type=code&client_id=366640526063-c9r0u3f5f5kph2fq18k98siq3td91gp2.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fmin-revisor.com%2Fapi%2Fgoogleauth%2Fcallback&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive%20https%3A%2F%2Fmail.google.com%2F&state=a511cf6d-0567-415e-b520-55734d6d91ab&prompt=consent';
+
+      if (newWindow) newWindow.location.href = response.payload;
     } else showToast('error', 'Sign in with Google failed');
   };
 

@@ -55,6 +55,7 @@ const DropDownSelect: React.FC<DropDownSelectProps> = ({
     if (setSelectedOptions) {
       setSelectedOptions(value);
     }
+
     if (onChange) {
       onChange(value);
     }

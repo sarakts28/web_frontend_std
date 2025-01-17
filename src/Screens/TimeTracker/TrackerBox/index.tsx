@@ -109,8 +109,10 @@ const TrackerBox = ({ activity, isToday }: TrackerBoxProps) => {
 
   const validateTime = (time: string): boolean => {
     const [hours, minutes] = time.split(':').map(Number);
+
     return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
   };
+
   const isValidEndTime = (start: string, end: string): boolean => {
     if (!start || !end) return true;
     const [startHours, startMinutes] = start.split(':').map(Number);
@@ -138,6 +140,7 @@ const TrackerBox = ({ activity, isToday }: TrackerBoxProps) => {
     isEnd: boolean = false
   ) => {
     const newTime = event.target.value;
+
     if (newTime === '' || (newTime.length <= 5 && validateTime(newTime))) {
       if (isEnd) {
         if (isValidEndTime(startTime, newTime)) {
@@ -185,6 +188,7 @@ const TrackerBox = ({ activity, isToday }: TrackerBoxProps) => {
       const time =
         currentTimer.durationInSeconds +
         Math.floor((Date.now() - (currentTimer.startTimestamp || 0)) / 1000);
+
       setElapsedTime(time);
     }, 1000);
 
@@ -250,13 +254,13 @@ const TrackerBox = ({ activity, isToday }: TrackerBoxProps) => {
 
       const endDate = new Date(date.getTime() + activity.duration * 1000);
 
-      const endTime = endDate.toLocaleTimeString('en-US', {
+      const endTimeValue = endDate.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false,
       });
 
-      setEndTime(endTime);
+      setEndTime(endTimeValue);
 
       setStartTime(time);
       setElapsedTime(activity.duration);
@@ -399,4 +403,5 @@ const TrackerBox = ({ activity, isToday }: TrackerBoxProps) => {
     </>
   );
 };
+
 export default TrackerBox;

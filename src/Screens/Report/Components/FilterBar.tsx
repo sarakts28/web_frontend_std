@@ -93,6 +93,7 @@ const FilterBar = ({ setFilterBarSelection }: FilterBarProps) => {
 
   const handleFilter = useCallback(() => {
     const { context, subTask, subDetailedTask, mainCategory } = filterState;
+
     if (
       !isFilterApply &&
       context.length &&
