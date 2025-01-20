@@ -1,5 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
+import { useThunkDispatch } from '../Hooks/useThunkDispatch';
+import { logout } from '../Store/Thunk/AuthThunk';
+import { resetState } from '../Store/Reducer/AuthSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const { REACT_APP_BASE_URL } = process.env;
@@ -86,12 +89,16 @@ export const createApiClient = (
     async (error) => {
       const originalRequest = error.config;
       const refreshToken = Cookies.get('RefreshToken');
+      const dispatch = useThunkDispatch();
 
-      console.error('Error:', error, originalRequest);
+      console.error('Error:', error, originalRequest, NODE_ENV);
 
       // Handle token expiration and refresh
       if (error.response?.status === 401 && NODE_ENV === 'development') {
-        localStorage.clear();
+        dispatch(logout({}));
+        dispatch(resetState());
+        Cookies.remove('AccessToken');
+        Cookies.remove('RefreshToken');
         return;
       } else if (
         error.response?.status === 401 &&
@@ -112,6 +119,8 @@ export const createApiClient = (
         } catch (err) {
           Cookies.remove('AccessToken');
           Cookies.remove('RefreshToken');
+          dispatch(logout({}));
+          dispatch(resetState());
           return Promise.reject(err);
         }
       }

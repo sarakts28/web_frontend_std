@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loginApplication } from '../Thunk/AuthThunk';
+import { createSlice } from '@reduxjs/toolkit';
+import { loginApplication, logout } from '../Thunk/AuthThunk';
 import { AuthLoginState } from '../Types/AuthTypes';
 
 const initialLoginState: AuthLoginState = {
@@ -25,26 +25,27 @@ const authSlice = createSlice({
     builder
       .addCase(loginApplication.pending, (state) => {
         state.login.isLoading = true;
+        state.login.isError = false;
+        state.login.message = '';
       })
-      .addCase(
-        loginApplication.fulfilled,
-        (state, action: PayloadAction<AuthLoginState['data']>) => {
-          state.login.isLoading = false;
-          state.login.data = action.payload;
-          state.login.isError = false;
-          state.login.message = '';
-        }
-      )
-      .addCase(
-        loginApplication.rejected,
-        (state, action: PayloadAction<AuthLoginState['message']>) => {
-          // Adjusted type
-          state.login.isError = true;
-          state.login.isLoading = false;
-          state.login.data = null;
-          state.login.message = action.payload?.message || 'An error occurred';
-        }
-      );
+      .addCase(loginApplication.fulfilled, (state, action) => {
+        state.login.isLoading = false;
+        state.login.data = action.payload;
+        state.login.message = 'Login successful';
+      })
+      .addCase(loginApplication.rejected, (state, action) => {
+        state.login.isLoading = false;
+        state.login.isError = true;
+        state.login.message = action.payload || 'Login failed';
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.login = { ...initialLoginState };
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.login.isLoading = false;
+        state.login.isError = true;
+        state.login.message = action.payload || 'Logout failed';
+      });
   },
 });
 

@@ -5,9 +5,9 @@ import { Box } from '@mui/material';
 import HeaderMenuLayout from '../Components/HeaderMenuLayout';
 
 const PrivateLayout = () => {
-  const checkAuth = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const checkAuth = useAuth();
 
   useEffect(() => {
     const authenticate = async () => {
@@ -21,7 +21,7 @@ const PrivateLayout = () => {
     };
 
     authenticate();
-  }, [checkAuth, navigate]);
+  }, [navigate, checkAuth]);
 
   if (loading) {
     return <div>Loading...</div>; // You can replace this with a loading spinner or any other loading indicator

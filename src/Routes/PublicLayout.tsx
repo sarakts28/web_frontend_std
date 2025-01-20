@@ -16,8 +16,6 @@ const PublicLayout = () => {
       setLoading(false);
     };
 
-    console.error(isAuthenticated, 'isAuthenticated in public');
-
     authenticate();
   }, [checkAuth]);
 

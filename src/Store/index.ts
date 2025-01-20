@@ -16,17 +16,8 @@ const rootPersistConfig = {
   whitelist: ['activityTimer'], // Only persist activityTimer in both cases
 };
 
-const authPersistConfig = {
-  key: 'auth',
-  storage,
-  blacklist: [], // Do not persist auth in production
-};
-
 const rootReducer = combineReducers({
-  auth:
-    process.env.NODE_ENV === 'production'
-      ? authReducer
-      : persistReducer(authPersistConfig, authReducer),
+  auth: authReducer,
   activityTimers: activityTimeTrackerReducer,
   timeTracker: timeTrackerReducer,
   reportActivity: reportReducer,

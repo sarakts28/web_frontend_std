@@ -1,7 +1,5 @@
 import { unwrapResult } from '@reduxjs/toolkit';
-import {
-  getAccessToken,
-} from '../Store/Selectors/AuthSelector';
+import { getAccessToken } from '../Store/Selectors/AuthSelector';
 import { createApiClient } from '../Services/apiClients';
 
 export const generateRandomId = (length: number) => {

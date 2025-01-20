@@ -34,25 +34,13 @@ const parseJwt = (token: string): any => {
   }
 };
 
-export const getAccessToken = createSelector(authStateSelector, (authState) => {
-  console.log(authState);
-  if (process.env.NODE_ENV === 'production') {
-    return Cookies.get('AccessToken');
-  } else {
-    return authState.login.data?.accessToken;
-  }
+export const getAccessToken = createSelector(authStateSelector, () => {
+  return Cookies.get('AccessToken');
 });
 
-export const getRefreshToken = createSelector(
-  authStateSelector,
-  (authState) => {
-    if (process.env.NODE_ENV === 'production') {
-      return Cookies.get('RefreshToken');
-    } else {
-      return authState.login.data?.refreshToken;
-    }
-  }
-);
+export const getRefreshToken = createSelector(authStateSelector, () => {
+  return Cookies.get('RefreshToken');
+});
 
 export const getDecodedToken = createSelector(getAccessToken, (accessToken) => {
   if (accessToken) {
