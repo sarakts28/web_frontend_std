@@ -27,8 +27,14 @@ export const useAuth = () => {
       const cookieToken = Cookies.get('AccessToken');
       const refreshTokenString = Cookies.get('RefreshToken');
 
+      console.log(refreshTokenString);
       if (!cookieToken && token && !refreshTokenString) {
         console.log('AccessToken cookie removed or does not exist.');
+        dispatch(resetState());
+      } else if (!refreshTokenString) {
+        Cookies.remove('AccessToken');
+
+        console.log('RefreshToken cookie removed or does not exist.');
         dispatch(resetState());
       } else if (!cookieToken && refreshTokenString) {
         console.warn('Token is missing or invalid. Checking refresh token...');
