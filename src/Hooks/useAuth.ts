@@ -15,10 +15,6 @@ export const useAuth = () => {
       return true;
     }
 
-    if (process.env.NODE_ENV === 'development') {
-      return false;
-    }
-
     return false;
   };
 
