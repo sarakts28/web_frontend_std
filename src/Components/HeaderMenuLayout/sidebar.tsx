@@ -70,7 +70,6 @@ const MenuBar: React.FC = () => {
       setTimeout(() => {
         dispatch(logout({ email: currentUserData?.email }));
         dispatch(resetState());
-        persistor.purge();
         showToast('success', 'Successfully logged out');
       }, 1000);
       return;

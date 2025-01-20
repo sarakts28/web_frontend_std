@@ -3,6 +3,8 @@ import Cookies from 'js-cookie';
 import { useThunkDispatch } from '../Hooks/useThunkDispatch';
 import { logout } from '../Store/Thunk/AuthThunk';
 import { resetState } from '../Store/Reducer/AuthSlice';
+import { useSelector } from 'react-redux';
+import { getUserData } from '../Store/Selectors/AuthSelector';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const { REACT_APP_BASE_URL } = process.env;
@@ -90,6 +92,7 @@ export const createApiClient = (
       const originalRequest = error.config;
       const refreshToken = Cookies.get('RefreshToken');
       const dispatch = useThunkDispatch();
+      const currentUserData = useSelector(getUserData);
 
       console.error('Error:', error, originalRequest, NODE_ENV);
 
@@ -97,8 +100,7 @@ export const createApiClient = (
       if (error.response?.status === 401 && NODE_ENV === 'development') {
         dispatch(logout({}));
         dispatch(resetState());
-        Cookies.remove('AccessToken');
-        Cookies.remove('RefreshToken');
+
         return;
       } else if (
         error.response?.status === 401 &&
@@ -117,9 +119,7 @@ export const createApiClient = (
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return client(originalRequest);
         } catch (err) {
-          Cookies.remove('AccessToken');
-          Cookies.remove('RefreshToken');
-          dispatch(logout({}));
+          dispatch(logout({ email: currentUserData?.email }));
           dispatch(resetState());
           return Promise.reject(err);
         }

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { loginApplication, logout } from '../Thunk/AuthThunk';
 import { AuthLoginState } from '../Types/AuthTypes';
+import Cookies from 'js-cookie';
 
 const initialLoginState: AuthLoginState = {
   data: null,
@@ -18,6 +19,8 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     resetState: (state) => {
+      Cookies.remove('AccessToken');
+      Cookies.remove('RefreshToken');
       state.login = { ...initialLoginState };
     },
   },

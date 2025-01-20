@@ -28,8 +28,6 @@ export const useAuth = () => {
         console.log('AccessToken cookie removed or does not exist.');
         dispatch(resetState());
       } else if (!refreshTokenString) {
-        Cookies.remove('AccessToken');
-
         console.log('RefreshToken cookie removed or does not exist.');
         dispatch(resetState());
       } else if (!cookieToken && refreshTokenString) {
