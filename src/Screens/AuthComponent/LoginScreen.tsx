@@ -68,7 +68,7 @@ const LoginPage = () => {
       const resp = await dispatch(
         loginApplication({ email: formData.email, password: formData.password })
       );
-
+      console.log('resp', resp);
       if (resp?.type?.includes(Fullfiled)) {
         showToast('success', t('loginSuccess'));
         navigate('/dashboard');
