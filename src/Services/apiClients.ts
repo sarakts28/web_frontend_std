@@ -53,6 +53,7 @@ export const createApiClient = (
   // Request interceptor to include Authorization header
   client.interceptors.request.use(
     async (config) => {
+      console.log(config.url, config, NODE_ENV);
       if (NODE_ENV === 'development') {
         const token = Cookies.get('AccessToken') || authTokenApi; // Get the access token from cookies
 
@@ -64,8 +65,8 @@ export const createApiClient = (
       }
 
       if (
-        config.url === '/api/Authentication/refresh-token-prod' ||
-        config.url === '/api/Authentication/login-prod'
+        config.url === 'Authentication/refresh-token-prod' ||
+        config.url === 'Authentication/login-prod'
       ) {
         return config;
       }

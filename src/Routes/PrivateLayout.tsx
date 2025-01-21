@@ -21,7 +21,7 @@ const PrivateLayout = () => {
     };
 
     authenticate();
-  }, [navigate, checkAuth]);
+  }, [checkAuth, navigate]);
 
   if (loading) {
     return <div>Loading...</div>; // You can replace this with a loading spinner or any other loading indicator
