@@ -72,7 +72,7 @@ export const createApiClient = (
 
       try {
         // Try to refresh token before each request
-        await client.get('/api/Authentication/refresh-token-prod');
+        await client.get('Authentication/refresh-token-prod');
         return config;
       } catch (error) {
         Cookies.remove('AccessToken');
