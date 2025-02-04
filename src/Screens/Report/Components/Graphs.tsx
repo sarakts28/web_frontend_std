@@ -18,7 +18,11 @@ const Graphs: React.FC = () => {
 
   useEffect(() => {
     const handleStorageChange = () => {
-      setGroupBy(getValueFromLocalStorage('groupBy', 'context'));
+      const value = getValueFromLocalStorage('groupBy', 'context');
+
+      if (value) {
+        setGroupBy(value);
+      }
     };
 
     const interval = setInterval(handleStorageChange, 2000);

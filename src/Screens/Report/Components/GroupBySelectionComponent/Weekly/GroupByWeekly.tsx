@@ -72,7 +72,7 @@ const GroupByWeekly = ({ selectedDate }: GroupByWeeklyProps) => {
             )}
           </GroupByTimeHeader>
 
-          {GroupData.length === 0 && <EmptyComponent text={t('noDataFound')} />}
+          {GroupData.length === 0 && <EmptyComponent text={'noDataFound'} />}
           <GroupItem
             key={generateRandomId(3)}
             toShow={'mainCategory'}

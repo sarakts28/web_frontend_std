@@ -28,6 +28,7 @@
   "logout": "Logout",
   "profile": "Profile",
   "settings": "Settings",
+  "applicationintegration": "Application Integrations",
   "dashboard": "Dashboard",
   "timeTrackerSubHeading": "We are tracking your screen activity to help you monitor your usage. You can record and review your time spent on different pages below.",
   "pageName": "Page Name",
@@ -130,6 +131,9 @@
   "Sent": "Sent",
   "Draft": "Draft",
   "Spam": "Spam",
+  "Important":"Important",
+  "Starred": "Starred",
+  "Trash": "Trash",
   "Compose": "Compose",
   "loginSuccess": "Login Successfully",
   "loginFailed": "Login Failed. Invalid Credentials",
@@ -143,5 +147,12 @@
   "joinCall": "Join Call",
   "roomID": "Room ID",
   "videoCall": "Video Call",
-  "callDetail": "Call Detail"
+  "callDetail": "Call Detail",
+  "primaryEmail": "Primary Email",
+  "secondaryEmail": "Secondary Email",
+  "phoneNumber": "Phone Number",
+  "noEmailFound": "No Email Found",
+  "noChatSelected": "No Chat Selected",
+  "noMessage": "Message is missing",
+  "somethingWentWrong": "Something went wrong"
 }

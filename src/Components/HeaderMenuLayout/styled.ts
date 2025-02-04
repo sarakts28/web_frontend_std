@@ -52,3 +52,24 @@ export const MenuItemStyled = styled(Typography)<{ selected: boolean }>(
 export const AvatarWrapper = styled(IconButton)({
   marginLeft: 'auto',
 });
+
+export const GenenalAppbarTitle = styled(Typography)({
+  fontSize: GenericStyle.font24,
+  fontWeight: 500,
+  color: Colors.black,
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  gap: 10,
+  '@media (max-width: 800px)': {
+    fontSize: GenericStyle.font14,
+  },
+});
+
+export const GeneralAppbarContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  width: '100%',
+});

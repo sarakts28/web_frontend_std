@@ -106,3 +106,9 @@ export const menuItem = (role: string, t: any): MenuItemProps[] => {
       return [];
   }
 };
+
+export const GeneralNavigationRoutes = [
+  'profile',
+  'settings',
+  'application integration',
+];

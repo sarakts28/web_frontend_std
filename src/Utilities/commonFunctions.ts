@@ -1,6 +1,7 @@
 import { unwrapResult } from '@reduxjs/toolkit';
 import { getAccessToken } from '../Store/Selectors/AuthSelector';
 import { createApiClient } from '../Services/apiClients';
+import { resetState } from '../Store/Reducer/AuthSlice';
 
 export const generateRandomId = (length: number) => {
   const characters =
@@ -44,10 +45,10 @@ export const unWrapReponse = (response: any) => {
   return message;
 };
 
-export const getApiClient = (state: any) => {
+export const getApiClient = (state: any, dispatch?: any) => {
   const accessToken = getAccessToken(state);
 
-  return createApiClient(accessToken);
+  return createApiClient(accessToken, dispatch);
 };
 
 export const generateColor = (input?: string) => {
@@ -88,7 +89,10 @@ export const formatDate = (date: Date): string => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
 
-export const getValueFromLocalStorage = (key: string, initialValue: string) => {
+export const getValueFromLocalStorage = (
+  key: string,
+  initialValue?: string
+) => {
   try {
     const item = window.localStorage.getItem(key);
 
@@ -141,4 +145,8 @@ export const formatDateTime = (dateString, options = { format: 'both' }) => {
   // formatDateTime(inputDate) // Output: "02 Jan, 2025 at 19:00"
   // formatDateTime(inputDate, { format: "date" }) // Output: "02 Jan, 2025"
   // formatDateTime(inputDate, { format: "time" }) // Output: "19:00"
+};
+
+export const handleRejectNavigation = (dispatch: any) => {
+  dispatch(resetState());
 };

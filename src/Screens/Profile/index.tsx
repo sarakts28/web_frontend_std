@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { FcGoogle } from 'react-icons/fc';
 import { useToast } from '../../Components/Toast';
 import { useThunkDispatch } from '../../Hooks/useThunkDispatch';
-import { getGoogleAuthentication } from '../../Store/Thunk/GoogleAuthenticationThunk';
+import { getGoogleAuthentication } from '../../Store/Thunk/GoogleActivityThunk';
 import { Fullfiled } from '../../Utilities/ApplicationConstants';
 const Profile = () => {
   const { showToast } = useToast();

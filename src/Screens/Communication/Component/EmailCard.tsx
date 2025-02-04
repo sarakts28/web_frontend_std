@@ -3,17 +3,18 @@ import {
   EmailCardNameContainer,
   EmailCardSubjectContainer,
 } from './ComponentStyle';
-import { DummyEmailDataType } from '../menuFile';
+import { EmailDataType } from '../menuFile';
 import { RxStarFilled } from 'react-icons/rx';
 import { MdStarOutline } from 'react-icons/md';
 import { Box, Typography } from '@mui/material';
 import EmailModal from './EmailModal';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { GenericStyle } from '../../../Utilities/GenericStyle';
 
 interface EmailCardProps {
-  email: DummyEmailDataType;
-  emailData: DummyEmailDataType[];
-  setEmailData: React.Dispatch<React.SetStateAction<DummyEmailDataType[]>>;
+  email: EmailDataType;
+  emailData: EmailDataType[];
+  setEmailData: React.Dispatch<React.SetStateAction<EmailDataType[]>>;
 }
 
 const EmailCard = ({ email, setEmailData, emailData }: EmailCardProps) => {
@@ -57,11 +58,35 @@ const EmailCard = ({ email, setEmailData, emailData }: EmailCardProps) => {
     return () => window.removeEventListener('resize', updateSubjectLength);
   }, []);
 
-  const userName = email?.SenderName?.split(' ')[0];
-  const subject =
-    email?.Subject?.length > subjectLength
-      ? `${email?.Subject.slice(0, subjectLength)}...`
-      : email?.Subject;
+  const senderName = useMemo(() => {
+    return email?.from?.split('<')[0];
+  }, [email]);
+
+  const sendingDate = useMemo(() => {
+    const date = new Date(email?.date);
+
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).format(date);
+  }, [email]);
+
+  const isEmailFavorite = useMemo(() => {
+    return email.labelIds.includes('STARRED') ? true : false;
+  }, [email]);
+
+  const subject = useMemo(() => {
+    if (!email?.subject) {
+      return 'No Subject';
+    }
+
+    return email?.subject?.length > subjectLength
+      ? `${email?.subject.slice(0, subjectLength)}...`
+      : email?.subject;
+  }, [email?.subject, subjectLength]);
 
   return (
     <>
@@ -73,24 +98,32 @@ const EmailCard = ({ email, setEmailData, emailData }: EmailCardProps) => {
               onHandleFav();
             }}
           >
-            {email?.isFav ? (
+            {isEmailFavorite ? (
               <RxStarFilled color="#FFC107" size={14} />
             ) : (
               <MdStarOutline size={14} />
             )}
           </Box>
-          <Typography>{userName}</Typography>
+          <Typography>{senderName}</Typography>
         </EmailCardNameContainer>
         <EmailCardSubjectContainer>{subject}</EmailCardSubjectContainer>
-        <Typography>{email?.time}</Typography>
+        <Typography sx={{ ...GenericStyle.font14Regular }}>
+          {sendingDate}
+        </Typography>
       </EmailCardContainer>
-
-      <EmailModal
-        handleClose={() => setOpenModal(false)}
-        openModal={openModal}
-        isCompose={false}
-        emailData={email}
-      />
+      {openModal && (
+        <EmailModal
+          handleClose={() => setOpenModal(false)}
+          openModal={openModal}
+          isCompose={
+            email.labelIds.some((label) => label === 'DRAFT') ? true : false
+          }
+          isDraft={
+            email.labelIds.some((label) => label === 'DRAFT') ? true : false
+          }
+          emailData={email}
+        />
+      )}
     </>
   );
 };

@@ -1,48 +1,80 @@
-import { useSelector } from 'react-redux';
-import { getAccessToken } from '../Store/Selectors/AuthSelector';
 import { useThunkDispatch } from './useThunkDispatch';
-import { refreshToken } from '../Store/Thunk/AuthThunk';
-import { useEffect, useCallback } from 'react';
+import { registerApplication } from '../Store/Thunk/AuthThunk';
+import { useEffect, useState, useCallback } from 'react';
 import Cookies from 'js-cookie';
 import { resetState } from '../Store/Reducer/AuthSlice';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { privateRoutes } from '../Routes/routesConfig';
+import {
+  getValueFromLocalStorage,
+  removeValueFromLocalStorage,
+  setValueToLocalStorage,
+} from '../Utilities/commonFunctions';
 
 export const useAuth = () => {
-  const token = useSelector(getAccessToken);
   const dispatch = useThunkDispatch();
-  const navigate = useNavigate();
+  const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [hasChecked, setHasChecked] = useState(false);
 
-  const checkAuth = useCallback(async () => {
-    console.log('working in hook');
-    if (token) {
-      return true;
-    }
-
-    const refreshTokenString = Cookies.get('RefreshToken');
-
-    if (refreshTokenString) {
-      const response = await dispatch(refreshToken());
-
-      if (response?.type?.includes('rejected')) {
-        dispatch(resetState());
-        return false;
-      }
-
-      return true;
-    }
-
-    dispatch(resetState());
-    return false;
-  }, [token, dispatch, navigate]);
+  const isPrivateRoute = useCallback(() => {
+    return privateRoutes.some((route) => route.path === location.pathname);
+  }, [location.pathname]);
 
   useEffect(() => {
-    const cookieToken = Cookies.get('AccessToken');
-    const refreshTokenString = Cookies.get('RefreshToken');
+    const checkAuth = async () => {
+      try {
+        if (process.env.NODE_ENV === 'production') {
+          if (
+            !isPrivateRoute() &&
+            getValueFromLocalStorage('isAuthenticated')
+          ) {
+            setIsAuthenticated(true);
+            setHasChecked(true);
+            return;
+          }
 
-    if (!cookieToken || !refreshTokenString) {
-      dispatch(resetState());
-    }
-  }, [token, navigate, dispatch]);
+          if (!isPrivateRoute()) {
+            // ✅ If on a public route, don't call API & mark auth check as done
+            setIsAuthenticated(false);
+            setHasChecked(true);
+            return;
+          }
 
-  return checkAuth;
+          // ✅ Call API only if on a private route
+          const response = await dispatch(registerApplication());
+
+          if (response?.payload && response.type.includes('fulfilled')) {
+            setIsAuthenticated(true);
+            setValueToLocalStorage('isAuthenticated', 'true');
+          } else {
+            dispatch(resetState());
+            removeValueFromLocalStorage('isAuthenticated');
+            setIsAuthenticated(false);
+          }
+        } else {
+          // 🔧 Development Mode: Check cookies
+          const accessToken = Cookies.get('AccessToken');
+          const refreshToken = Cookies.get('RefreshToken');
+
+          if (!accessToken || !refreshToken) {
+            dispatch(resetState());
+            setIsAuthenticated(false);
+          } else {
+            setIsAuthenticated(true);
+          }
+        }
+      } catch (error) {
+        console.error('Authentication error:', error);
+        dispatch(resetState());
+        setIsAuthenticated(false);
+      } finally {
+        setHasChecked(true);
+      }
+    };
+
+    checkAuth();
+  }, [dispatch, isPrivateRoute, location.pathname]);
+
+  return { isAuthenticated, hasChecked };
 };

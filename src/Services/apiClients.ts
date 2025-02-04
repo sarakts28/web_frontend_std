@@ -1,19 +1,18 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import { handleRejectNavigation } from '../Utilities/commonFunctions';
 import Cookies from 'js-cookie';
-import { useThunkDispatch } from '../Hooks/useThunkDispatch';
-import { logout } from '../Store/Thunk/AuthThunk';
-import { resetState } from '../Store/Reducer/AuthSlice';
-import { useSelector } from 'react-redux';
-import { getUserData } from '../Store/Selectors/AuthSelector';
+// import { registerApplication } from '../Store/Thunk/AuthThunk';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const { REACT_APP_BASE_URL } = process.env;
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { NODE_ENV } = process.env;
+const { REACT_APP_BASE_URL, NODE_ENV } = process.env;
 
-// Function to create an API client
+// Token refresh state
+let isRefreshing = false;
+let refreshPromise: Promise<void> | null = null;
+
 export const createApiClient = (
-  authTokenApi?: string
+  authTokenApi?: string,
+  dispatch?: any
 ): {
   get: <T = any>(
     endpoint: string,
@@ -38,91 +37,78 @@ export const createApiClient = (
 } => {
   const client: AxiosInstance = axios.create({
     baseURL: REACT_APP_BASE_URL,
-    withCredentials: NODE_ENV === 'production',
+    withCredentials: NODE_ENV === 'production', // ✅ Only `withCredentials` in prod
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization:
-        NODE_ENV === 'development' && authTokenApi
-          ? `Bearer ${authTokenApi}`
-          : '',
+      ...(NODE_ENV === 'development' && authTokenApi
+        ? { Authorization: `Bearer ${authTokenApi}` }
+        : {}),
       'ngrok-skip-browser-warning': 'ngrok-skip-browser-warning',
     },
   });
 
-  // Request interceptor to include Authorization header
+  // ✅ Request Interceptor: Attach token only in development
   client.interceptors.request.use(
-    async (config) => {
-      console.log(config.url, config, NODE_ENV);
+    (config) => {
       if (NODE_ENV === 'development') {
-        const token = Cookies.get('AccessToken') || authTokenApi; // Get the access token from cookies
+        const token = authTokenApi || Cookies.get('AccessToken');
 
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
-
-        return config;
       }
 
-      if (
-        config.url === 'Authentication/refresh-token-prod' ||
-        config.url === 'Authentication/login-prod'
-      ) {
-        return config;
-      }
-
-      try {
-        // Try to refresh token before each request
-        await client.get('Authentication/refresh-token-prod');
-        return config;
-      } catch (error) {
-        Cookies.remove('AccessToken');
-        Cookies.remove('RefreshToken');
-        return Promise.reject(error);
-      }
+      return config;
     },
-    (error) => {
-      return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
   );
 
-  // Add response interceptors for handling errors
+  // ✅ Response Interceptor: Handle 401 errors
   client.interceptors.response.use(
     (response: AxiosResponse) => response,
     async (error) => {
       const originalRequest = error.config;
-      const refreshToken = Cookies.get('RefreshToken');
-      const dispatch = useThunkDispatch();
-      const currentUserData = useSelector(getUserData);
 
-      console.error('Error:', error, originalRequest, NODE_ENV);
-
-      // Handle token expiration and refresh
+      // 🚀 DEVELOPMENT MODE: Redirect on failure
       if (error.response?.status === 401 && NODE_ENV === 'development') {
-        dispatch(logout({}));
-        dispatch(resetState());
+        handleRejectNavigation(dispatch);
+        return Promise.reject(error);
+      }
 
-        return;
-      } else if (
+      // 🚀 PRODUCTION MODE: Handle Token Refresh
+      if (
         error.response?.status === 401 &&
         NODE_ENV === 'production' &&
-        refreshToken
+        !error.config.url?.includes('login-prod')
       ) {
-        try {
-          const response = await client.get(
-            '/api/Authentication/refresh-token-prod'
-          );
-          const newAccessToken = response.data.accessToken;
-          const newRefreshToken = response.data.refreshToken;
+        if (!isRefreshing) {
+          isRefreshing = true;
 
-          Cookies.set('AccessToken', newAccessToken);
-          Cookies.set('RefreshToken', newRefreshToken);
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          refreshPromise = (async () => {
+            try {
+              await client.get(
+                `${REACT_APP_BASE_URL}Authentication/refresh-token-prod`
+              );
+            } catch (err) {
+              handleRejectNavigation(dispatch);
+              throw err;
+            } finally {
+              isRefreshing = false;
+              refreshPromise = null;
+            }
+          })();
+        }
+
+        try {
+          await refreshPromise;
+          if (originalRequest._retry) return Promise.reject(error);
+          originalRequest._retry = true; // Prevent infinite retry loops
           return client(originalRequest);
-        } catch (err) {
-          dispatch(logout({ email: currentUserData?.email }));
-          dispatch(resetState());
-          return Promise.reject(err);
+        } catch (refreshError) {
+          handleRejectNavigation(dispatch);
+
+          return Promise.reject(refreshError);
         }
       }
 

@@ -1,4 +1,4 @@
-import { Box, styled, css } from '@mui/system';
+import { Box, styled, css } from '@mui/material';
 import { Colors } from '../../Utilities/Colors';
 import { GenericStyle } from '../../Utilities/GenericStyle';
 

@@ -39,12 +39,12 @@ export const EmailCardContainer = styled(Box)`
 `;
 
 export const EmailCardNameContainer = styled(Box)`
-  width: 12%;
+  width: 25%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  gap: 5px;
+  gap: 8px;
 
   @media (min-width: 551px) and (max-width: 1500px) {
     width: 20%;
@@ -146,4 +146,27 @@ export const CallDetailCardContainer = styled(Box)<{ type: boolean }>`
   gap: 10px;
   width: fit-content;
   margin: ${GenericStyle.primary_margin};
+`;
+
+export const EmailNavigationContainer = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 75vh;
+  width: 100%;
+  padding: 10px;
+  overflow: auto;
+`;
+
+export const EmailSenderModalField = styled(Box)`
+  max-width: 95%;
+  overflow: auto;
+  white-space: nowrap;
+  height: auto;
+  border: 1px solid ${Colors.borderColor};
+  border-radius: 5px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 5px;
 `;

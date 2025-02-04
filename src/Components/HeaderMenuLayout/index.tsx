@@ -7,15 +7,18 @@ const HeaderMenuLayout = () => {
   return (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'auto' }}>
       {/* Sidebar */}
-      <Sidebar />
 
+      <Sidebar />
       {/* Main Content */}
       <Box
         sx={{
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          pl: { xs: 9, sm: 3 },
+          pl: {
+            xs: 9,
+            sm: 3,
+          },
           pr: 2,
         }}
       >

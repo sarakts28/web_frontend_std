@@ -1,21 +1,9 @@
 import { RootState } from '../index';
-
-import { createSelector } from 'reselect';
+import { createSelector } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 
-interface AuthState {
-  login: {
-    data?: {
-      accessToken?: string;
-      refreshToken?: string;
-    };
-    message: string;
-  };
-}
+const authStateSelector = (state: RootState) => state.auth;
 
-const authStateSelector = (state: RootState): AuthState => state.auth;
-
-// Helper function to decode JWT
 const parseJwt = (token: string): any => {
   try {
     const base64Url = token.split('.')[1];
@@ -46,18 +34,22 @@ export const getDecodedToken = createSelector(getAccessToken, (accessToken) => {
   if (accessToken) {
     return parseJwt(accessToken);
   } else {
-    console.warn('Access token is missing');
-  }
+    try {
+      var displayInfoEncoded = Cookies.get('DisplayInfo');
 
-  return null;
+      if (!displayInfoEncoded) {
+        return null;
+      }
+
+      const decodedDisplayInfo = decodeURIComponent(displayInfoEncoded);
+
+      return JSON.parse(decodedDisplayInfo);
+    } catch (error) {
+      console.error('Error decoding DisplayInfo:', error);
+      return null;
+    }
+  }
 });
-
-export const getUserRole = createSelector(
-  getDecodedToken,
-  (decodedToken: any) => {
-    return decodedToken?.role;
-  }
-);
 
 export const getUserData = createSelector(
   getDecodedToken,
@@ -66,12 +58,12 @@ export const getUserData = createSelector(
   }
 );
 
-export const getAuthLoader = createSelector(authStateSelector, () => {
-  return false;
+export const getAuthLoader = createSelector(authStateSelector, (authState) => {
+  return authState.login.isLoading;
 });
 
-export const getAuthError = createSelector(authStateSelector, () => {
-  return false;
+export const getAuthError = createSelector(authStateSelector, (authState) => {
+  return authState.login.isError;
 });
 
 export const getAuthMessage = createSelector(authStateSelector, (authState) => {

@@ -9,6 +9,7 @@ import { CompanyLogo } from '../../Assests/Svg';
 import { menuItem, MenuItemProps } from './menuList';
 import { useTranslation } from 'react-i18next';
 import { IoLogOut, IoSettings } from 'react-icons/io5';
+import { TbSettingsCog } from 'react-icons/tb';
 import { Colors } from '../../Utilities/Colors';
 import { Logout, Settings } from '../../Utilities/ApplicationConstants';
 import AvatarComponent from '../Avatar';
@@ -131,6 +132,38 @@ const MobileDrawer = ({
                   size={24}
                   color={
                     selectedItem === Settings
+                      ? Colors.secondaryApplicationColor
+                      : Colors.applicationColor
+                  }
+                />
+              </ListItemIcon>
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: 'center',
+                px: 2.5,
+                bgcolor: 'transparent',
+
+                '&:hover': {
+                  bgcolor: Colors.sagaGreen,
+                },
+              }}
+              onClick={() => onClickCommonItem('Application Integration')}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 6,
+                  mr: 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <TbSettingsCog
+                  size={24}
+                  color={
+                    selectedItem === 'Application Integration'
                       ? Colors.secondaryApplicationColor
                       : Colors.applicationColor
                   }

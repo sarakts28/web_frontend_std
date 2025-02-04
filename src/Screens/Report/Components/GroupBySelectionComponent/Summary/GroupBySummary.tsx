@@ -61,7 +61,7 @@ const GroupBySummary = ({ setSelectionButton }: GroupBySummaryProps) => {
           />
         </GroupByHeaderContainer>
         <GroupByInnerContainer>
-          {GroupData.length === 0 && <EmptyComponent text={t('noDataFound')} />}
+          {GroupData.length === 0 && <EmptyComponent text={'noDataFound'} />}
           <GroupItem
             toShow={toShow ? toShow : 'description'}
             groupData={GroupData}

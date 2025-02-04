@@ -2,7 +2,6 @@ import React from 'react';
 import LoginPage from '../Screens/AuthComponent/LoginScreen';
 import Dashboard from '../Screens/Dashboard';
 import TimeTracker from '../Screens/TimeTracker';
-import Communication from '../Screens/Communication';
 import User from '../Screens/User';
 import Settings from '../Screens/Setting';
 import Profile from '../Screens/Profile';
@@ -10,6 +9,8 @@ import Report from '../Screens/Report';
 import ForgetScreen from '../Screens/AuthComponent/ForgetScreen';
 import CodeScreen from '../Screens/AuthComponent/CodeScreen';
 import ResetPassword from '../Screens/AuthComponent/ResetPasswordScreen';
+import CommunicationPage from '../Screens/Communication/CommunicationPage';
+import ApplicationIntegrations from '../Screens/ApplicationIntegration';
 
 export const publicRoutes = [
   {
@@ -41,7 +42,7 @@ export const privateRoutes = [
   },
   {
     path: '/communication',
-    element: <Communication />,
+    element: <CommunicationPage />,
   },
   {
     path: '/user',
@@ -58,5 +59,9 @@ export const privateRoutes = [
   {
     path: '/report',
     element: <Report />,
+  },
+  {
+    path: '/application integration',
+    element: <ApplicationIntegrations />,
   },
 ];

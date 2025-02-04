@@ -1,5 +1,5 @@
 import { RootState } from '../index';
-import { createSelector } from 'reselect';
+import { createSelector } from '@reduxjs/toolkit';
 
 const reportStateSelector = (state: RootState) => state.reportActivity;
 

@@ -8,6 +8,7 @@ import {
   timeTrackerReducer,
   reportReducer,
   googleReducer,
+  CustomersReducer,
 } from './Reducer';
 
 const rootPersistConfig = {
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
   activityTimers: activityTimeTrackerReducer,
   timeTracker: timeTrackerReducer,
   reportActivity: reportReducer,
-  googleAuth: googleReducer,
+  googleActivity: googleReducer,
+  customers: CustomersReducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

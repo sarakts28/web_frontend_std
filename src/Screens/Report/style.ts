@@ -1,4 +1,4 @@
-import { Box, styled } from '@mui/system';
+import { Box, styled } from '@mui/material';
 import { GenericStyle } from '../../Utilities/GenericStyle';
 
 export const MainContainer = styled(Box)`

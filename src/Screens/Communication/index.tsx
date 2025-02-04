@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
 import UserCardWithAvatar from '../../Components/UserCardWithAvatar';
 import {
   CommunicationChatContainer,
@@ -10,6 +9,7 @@ import {
   ToggleContainer,
   SearchContainer,
   CommunicationDetailContainer,
+  AllEmailButtonContainer,
 } from './style';
 import { IoCall, IoChatbox } from 'react-icons/io5';
 import { Colors } from '../../Utilities/Colors';
@@ -18,29 +18,37 @@ import {
   AvatarComponent,
   Search,
   SelectionToggle,
+  ButtonField,
   DropDownSelect,
+  Spinner,
+  PageNavigation,
 } from '../../Components';
-import { CallOptionsMenu, dummyData, toggleMenu } from './menuFile';
+import { toggleMenu, CallOptionsMenu } from './menuFile';
 import { MdOutlineEmail } from 'react-icons/md';
 import UserEmail from './Component/UserEmail';
 import UserChat from './Component/UserChat';
 import UserNewCall from './Component/UserNewCall';
 import UserCallDetails from './Component/UserCallDetails';
-import { useTranslation } from 'react-i18next';
+import { useCommunication } from '../../Hooks/useCommunication';
+import { CustomerDataType } from '../../Store/Types/CustomersType';
 const Communication = () => {
-  const [currentUser, setcurrentUser] = useState<any>(null);
-  const [toggle, setToggle] = useState<number | string>(1);
-  const [userData, setUserData] = useState(dummyData);
-  const [search, setSearch] = useState<string>('');
-  const [callModal, setCallModal] = useState<string | string[]>('call');
-  const { t } = useTranslation();
-
-  const handleUserClick = (item: any) => {
-    setcurrentUser(item);
-    if (toggle === 4) {
-      setToggle(3);
-    }
-  };
+  const {
+    t,
+    currentCustomer,
+    userData,
+    setCurrentCustomer,
+    toggle,
+    setToggle,
+    setCallModal,
+    setSearch,
+    callModal,
+    handleUserClick,
+    customerListLoading,
+    totalCustomerListPages,
+    currentCustomerPage,
+    setCurrentCustomerPage,
+    totalCustomers,
+  } = useCommunication();
 
   const renderCallOptions = () => {
     return (
@@ -53,13 +61,77 @@ const Communication = () => {
     );
   };
 
-  useEffect(() => {
-    const filterData = dummyData.filter((item: any) => {
-      return item.name.toLowerCase().includes(search.toLowerCase());
-    });
+  const renderCommunicationUser = () => {
+    return (
+      <CommunicationUserContainer>
+        <SearchBox>
+          <SearchContainer>
+            <Search
+              onSearchTermChange={(searchValue: string) =>
+                setSearch(searchValue)
+              }
+              onCrossIconClick={() => setSearch('')}
+            />
+          </SearchContainer>
+          <ToggleContainer>
+            <SelectionToggle
+              menu={toggleMenu(t)}
+              selectedButton={toggle}
+              setSelectedButton={setToggle}
+              direction="row"
+              size="medium"
+              activeColor={Colors.darkOrgane}
+              activeTextColor={Colors.white}
+            />
+          </ToggleContainer>
+        </SearchBox>
 
-    setUserData(filterData);
-  }, [search]);
+        {toggle === 1 && (
+          <AllEmailButtonContainer>
+            <ButtonField
+              label="All Emails"
+              onClick={() => setCurrentCustomer(null)}
+              backgroundColor={Colors.black}
+              height={28}
+              labelStyle={{ ...GenericStyle.font10Bold }}
+            />
+          </AllEmailButtonContainer>
+        )}
+        {customerListLoading ? (
+          <Spinner size={20} />
+        ) : userData && userData.length > 0 ? (
+          <>
+            {userData.map((singleData: CustomerDataType) => {
+              return (
+                <Box sx={{ width: '100%', mb: '10px' }}>
+                  <UserCardWithAvatar
+                    name={singleData.fullName}
+                    onClick={() => handleUserClick(singleData)}
+                    isActive={singleData.id === currentCustomer?.id}
+                  />
+                </Box>
+              );
+            })}
+            {totalCustomerListPages > 1 && (
+              <Box
+                sx={{ display: 'flex', justifyContent: 'flex-end', mt: '10px' }}
+              >
+                <PageNavigation
+                  currentPage={currentCustomerPage}
+                  rowsPerPage={25}
+                  totalElements={totalCustomers}
+                  setCurrentPage={setCurrentCustomerPage}
+                  showRowsPerPage={false}
+                />
+              </Box>
+            )}
+          </>
+        ) : (
+          <Typography>No User Found</Typography>
+        )}
+      </CommunicationUserContainer>
+    );
+  };
 
   return (
     <>
@@ -83,7 +155,7 @@ const Communication = () => {
           sx={(GenericStyle.font16Bold, { cursor: 'pointer' })}
           onClick={() => {
             setToggle(4);
-            setcurrentUser(null);
+            setCurrentCustomer(null);
           }}
         >
           {toggle === 3 || toggle === 4 ? renderCallOptions() : ''}
@@ -92,62 +164,19 @@ const Communication = () => {
 
       <CommunicationMainContainer>
         {/* User Container */}
-        <CommunicationUserContainer>
-          <SearchBox>
-            <SearchContainer>
-              <Search
-                onSearchTermChange={(searchValue: string) =>
-                  setSearch(searchValue)
-                }
-                onCrossIconClick={() => setSearch('')}
-              />
-            </SearchContainer>
-            <ToggleContainer>
-              <SelectionToggle
-                menu={toggleMenu(t)}
-                selectedButton={toggle}
-                setSelectedButton={setToggle}
-                direction="row"
-                size="medium"
-                activeColor={Colors.darkOrgane}
-                activeTextColor={Colors.white}
-              />
-            </ToggleContainer>
-          </SearchBox>
-          {userData.map((singleData: any) => {
-            // change original data
-            return (
-              <Box sx={{ width: '100%', mb: '10px' }}>
-                <UserCardWithAvatar
-                  name={singleData.name}
-                  url={singleData.url}
-                  time={singleData.time}
-                  message={toggle === 2 && singleData.messages[0]?.content}
-                  onClick={() => handleUserClick(singleData)}
-                  isActive={singleData.id === currentUser?.id}
-                />
-              </Box>
-            );
-          })}
-        </CommunicationUserContainer>
+        {renderCommunicationUser()}
         {/* Chat Container */}
         <CommunicationChatContainer isNewCall={toggle === 4}>
           {toggle === 4 ? (
             <UserNewCall callModal={callModal === 'call' ? true : false} />
-          ) : currentUser === null ? (
-            <Typography sx={GenericStyle.font16Bold}>Select a User</Typography>
           ) : (
             <>
               {toggle === 1 ? (
                 <UserEmail />
               ) : toggle === 2 ? (
-                <UserChat
-                  userData={currentUser}
-                  setData={setUserData}
-                  data={userData}
-                />
+                <UserChat />
               ) : (
-                <UserCallDetails userData={currentUser} />
+                <UserCallDetails userData={currentCustomer} />
               )}
             </>
           )}
@@ -160,19 +189,33 @@ const Communication = () => {
           }}
         >
           <CommunicationDetailContainer>
-            {currentUser ? (
+            {currentCustomer ? (
               <>
                 <AvatarComponent
-                  imageUrl={currentUser?.url}
-                  name={currentUser?.name}
+                  name={currentCustomer.fullName}
                   size="xxlarge"
                 />
-                <Typography>{currentUser?.name}</Typography>
-                <Typography>
-                  Email:{' '}
-                  {`${currentUser?.name.split(' ')[0].toLowerCase()}@gmail.com`}
-                </Typography>
-                <Typography>+1 234 567 8901</Typography>
+                <Typography>{currentCustomer.fullName}</Typography>
+                {currentCustomer.email &&
+                  currentCustomer.email.length > 0 &&
+                  currentCustomer.email.map((email: string, index) => {
+                    return index === 0 ? (
+                      <>
+                        <Typography>{t('primaryEmail')}</Typography>
+                        <Typography>{email}</Typography>
+                      </>
+                    ) : index === 1 ? (
+                      <>
+                        <Typography>{t('secondaryEmail')}</Typography>
+                        <Typography>{email}</Typography>
+                      </>
+                    ) : (
+                      <Typography>{email}</Typography>
+                    );
+                  })}
+
+                <Typography>{t('phoneNumber')}</Typography>
+                <Typography>{currentCustomer.phoneNumber}</Typography>
               </>
             ) : (
               <Typography>Select User</Typography>

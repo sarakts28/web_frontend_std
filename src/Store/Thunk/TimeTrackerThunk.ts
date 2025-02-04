@@ -10,7 +10,9 @@ import { getApiClient } from '../../Utilities/commonFunctions';
 export const postTimeTracker = createAsyncThunk(
   TimeTrackerAdded,
   async (payload: any, thunkAPI) => {
-    const state = thunkAPI.getState();
+    const { getState } = thunkAPI;
+
+    const state = getState();
     const api = getApiClient(state);
 
     try {

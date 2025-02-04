@@ -2,14 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Box, Typography } from '@mui/material';
 import { ButtonField, InputField, DropDownSelect } from '../../../Components';
 import { EmailButtonContainer } from './ComponentStyle';
-import { emailTemplates } from '../menuFile';
+import { EmailDataType, emailTemplates } from '../menuFile';
 import { SelectionOption } from '../../../Utilities/TypeDeclaraction';
+import { GenericStyle } from '../../../Utilities/GenericStyle';
+import { EmailSenderModalField } from './ComponentStyle';
 
 interface EmailModalProps {
   handleClose: () => void;
   openModal: boolean;
   isCompose: boolean;
-  emailData?: any;
+  emailData?: EmailDataType;
+  isDraft?: boolean;
 }
 
 const EmailModal = ({
@@ -17,6 +20,7 @@ const EmailModal = ({
   openModal,
   isCompose,
   emailData,
+  isDraft = false,
 }: EmailModalProps) => {
   const [emailDetail, setEmailDetail] = useState({
     recipient: '',
@@ -63,7 +67,7 @@ const EmailModal = ({
           onSubmit={handleSubmit}
           style={{ display: 'flex', gap: '15px', flexDirection: 'column' }}
         >
-          {isCompose && (
+          {isCompose ? (
             <>
               <Typography>
                 You can select email template. To make your email more
@@ -74,50 +78,98 @@ const EmailModal = ({
                 options={emailTemplates}
                 onChange={handleSelectChange}
               />
+
+              <InputField
+                label={'Recipient'}
+                value={emailDetail.recipient}
+                onChange={isCompose ? handleChange : () => {}}
+                name="recipient"
+                placeholder="Enter Sender Name"
+              />
+              <InputField
+                label={'Subject'}
+                value={emailDetail.subject}
+                onChange={isCompose ? handleChange : () => {}}
+                name="subject"
+                placeholder="Enter Subject"
+              />
+              <InputField
+                label="Body"
+                value={emailDetail.body}
+                onChange={isCompose ? handleChange : () => {}}
+                multiline
+                rows={6}
+                name="body"
+                placeholder="Enter Body"
+              />
+            </>
+          ) : (
+            <>
+              <Box>
+                <Typography sx={{ ...GenericStyle.font16Bold, mb: 1 }}>
+                  Sender
+                </Typography>
+                <EmailSenderModalField>
+                  {emailDetail.recipient}
+                </EmailSenderModalField>
+              </Box>
+              <Box>
+                <Typography sx={{ ...GenericStyle.font16Bold, mb: 1 }}>
+                  Subject
+                </Typography>
+                <EmailSenderModalField>
+                  {emailDetail.subject}
+                </EmailSenderModalField>
+              </Box>
+
+              <Box>
+                <Typography sx={{ ...GenericStyle.font16Bold, mb: 1 }}>
+                  Email Body
+                </Typography>
+                <Box sx={{ overflow: 'auto', maxHeight: '50vh' }}>
+                  <Box dangerouslySetInnerHTML={{ __html: emailDetail.body }} />
+                </Box>
+              </Box>
             </>
           )}
-
-          <InputField
-            label={isCompose || emailData?.type === 'sent' ? 'To' : 'From'}
-            value={emailDetail.recipient}
-            onChange={isCompose ? handleChange : () => {}}
-            name="recipient"
-            placeholder="Enter Sender Name"
-          />
-          <InputField
-            label={'Subject'}
-            value={emailDetail.subject}
-            onChange={isCompose ? handleChange : () => {}}
-            name="subject"
-            placeholder="Enter Subject"
-          />
-          <InputField
-            label="Body"
-            value={emailDetail.body}
-            onChange={isCompose ? handleChange : () => {}}
-            multiline
-            rows={6}
-            name="body"
-            placeholder="Enter Body"
-          />
         </form>
       </>
     );
   };
 
   useEffect(() => {
-    if (isCompose) {
+    if (isCompose && !isDraft) {
       return;
     }
 
     if (emailData) {
+      const extractFormattedTextFromHTML = (html: string) => {
+        const tempDiv = document.createElement('div');
+
+        tempDiv.innerHTML = html;
+
+        // Convert <br> and block elements into new lines
+        tempDiv.querySelectorAll('br').forEach((br) => (br.outerHTML = '\n'));
+        tempDiv
+          .querySelectorAll('p, div')
+          .forEach(
+            (el) => (el.outerHTML = (el as HTMLElement).innerText + '\n\n')
+          );
+
+        return tempDiv.innerText.trim(); // innerText preserves some formatting
+      };
+
       setEmailDetail({
-        recipient: emailData?.SenderName,
-        subject: emailData?.Subject,
-        body: emailData?.Body,
+        recipient: emailData.labelIds.includes('SENT')
+          ? 'Need to update this from API'
+          : emailData?.from,
+        subject: emailData?.subject,
+        body: isDraft
+          ? extractFormattedTextFromHTML(emailData?.body)
+          : emailData?.body, // Extract plain text
       });
     }
-  }, [emailData, isCompose]);
+  }, [emailData, isCompose, isDraft]);
 
   return (
     <div>

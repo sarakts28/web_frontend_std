@@ -1,81 +1,113 @@
-import { useEffect, useState } from 'react';
-import { ButtonField, SelectionToggle } from '../../../Components';
-import { UserEmailSelectionContainer } from './ComponentStyle';
+import { useState } from 'react';
+import {
+  ButtonField,
+  GoogleButton,
+  PageNavigation,
+  SelectionToggle,
+  Spinner,
+} from '../../../Components';
+import {
+  UserEmailSelectionContainer,
+  EmailNavigationContainer,
+} from './ComponentStyle';
 import { Colors } from '../../../Utilities/Colors';
 import { useTranslation } from 'react-i18next';
-import {
-  dummyEmailData,
-  DummyEmailDataType,
-  toggleEmailMenu,
-} from '../menuFile';
+import { EmailDataType, toggleEmailMenu } from '../menuFile';
 import { IoPencil } from 'react-icons/io5';
 import EmailCard from './EmailCard';
-import { Box, useMediaQuery } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import EmailModal from './EmailModal';
+import { useCommunication } from '../../../Hooks/useCommunication';
 
 const UserEmail = () => {
-  const [toggle, setToggle] = useState<number | string>(1);
   const [composeModal, setComposeModal] = useState<boolean>(false);
   const smallScreen = useMediaQuery('(max-width: 550px)');
   const largeScreen = useMediaQuery('(min-width: 1200px)');
 
-  const [emailData, setEmailData] =
-    useState<DummyEmailDataType[]>(dummyEmailData);
+  const {
+    listEmail,
+    totalEmails,
+    currentEmailPage,
+    setCurrentEmailPage,
+    isEmailLoading: isLoading,
+    emailToggle,
+    setEmailToggle,
+  } = useCommunication();
+
+  const [emailData, setEmailData] = useState<EmailDataType[]>(listEmail);
 
   const { t } = useTranslation();
 
-  useEffect(() => {
-    const filterData = dummyEmailData.filter((item: DummyEmailDataType) => {
-      return (
-        (item.type === 'inbox' && toggle === 1) ||
-        (item.type === 'sent' && toggle === 2) ||
-        (item.type === 'spam' && toggle === 3)
-      );
-    });
+  if (isLoading) {
+    return <Spinner size={40} />;
+  }
 
-    setEmailData(filterData);
-  }, [toggle]);
   return (
     <>
-      <Box>
-        <UserEmailSelectionContainer>
-          <SelectionToggle
-            menu={toggleEmailMenu(t)}
-            selectedButton={toggle}
-            setSelectedButton={setToggle}
-            direction="row"
-            size={smallScreen ? 'small' : largeScreen ? 'large' : 'medium'}
-            activeColor={Colors.darkOrgane}
-            activeTextColor={Colors.white}
-          />
-          <ButtonField
-            label={t('Compose')}
-            variant="contained"
-            backgroundColor={Colors.darkOrgane}
-            textColor={Colors.white}
-            startIcon={<IoPencil />}
-            onClick={() => setComposeModal(true)}
-            height={smallScreen ? 30 : 40}
-          />
-        </UserEmailSelectionContainer>
-        <Box sx={{ mt: 2, width: 'auto' }}>
-          {emailData &&
-            emailData.map((item: DummyEmailDataType, index: any) => (
-              <EmailCard
-                key={index}
-                email={item}
-                emailData={emailData}
-                setEmailData={setEmailData}
+      {listEmail.length >= 0 ? (
+        <Box>
+          <UserEmailSelectionContainer>
+            <SelectionToggle
+              menu={toggleEmailMenu(t)}
+              selectedButton={emailToggle}
+              setSelectedButton={setEmailToggle}
+              direction="row"
+              size={smallScreen ? 'small' : largeScreen ? 'large' : 'medium'}
+              activeColor={Colors.darkOrgane}
+              activeTextColor={Colors.white}
+            />
+            <ButtonField
+              label={t('Compose')}
+              variant="contained"
+              backgroundColor={Colors.darkOrgane}
+              textColor={Colors.white}
+              startIcon={<IoPencil />}
+              onClick={() => setComposeModal(true)}
+              height={smallScreen ? 30 : 40}
+            />
+          </UserEmailSelectionContainer>
+          <EmailNavigationContainer>
+            <Box
+              sx={{
+                mt: 2,
+                width: '100%',
+                height: '65vh',
+                overflow: 'auto',
+              }}
+            >
+              {listEmail.length > 0 ? (
+                listEmail.map((item: EmailDataType, index: any) => (
+                  <EmailCard
+                    key={index}
+                    email={item}
+                    emailData={emailData}
+                    setEmailData={setEmailData}
+                  />
+                ))
+              ) : (
+                <Typography sx={{ textAlign: 'center' }}>
+                  {t('noEmailFound')}
+                </Typography>
+              )}
+            </Box>
+            {listEmail.length > 0 && (
+              <PageNavigation
+                currentPage={currentEmailPage}
+                totalElements={totalEmails}
+                setCurrentPage={setCurrentEmailPage}
+                showRowsPerPage={false}
               />
-            ))}
+            )}
+          </EmailNavigationContainer>
+          <EmailModal
+            handleClose={() => setComposeModal(false)}
+            openModal={composeModal}
+            isCompose={true}
+          />
         </Box>
-
-        <EmailModal
-          handleClose={() => setComposeModal(false)}
-          openModal={composeModal}
-          isCompose={true}
-        />
-      </Box>
+      ) : (
+        <GoogleButton />
+      )}
     </>
   );
 };

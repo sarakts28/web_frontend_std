@@ -46,7 +46,8 @@ const filterString = (filters: any): string => {
 export const postActivityTracker = createAsyncThunk(
   TimeTrackerActivityAdded,
   async (payload: any, thunkAPI) => {
-    const state = thunkAPI.getState();
+    const { getState } = thunkAPI;
+    const state = getState();
     const api = getApiClient(state);
 
     try {

@@ -28,6 +28,7 @@
   "logout": "Log ud",
   "profile": "Profil",
   "settings": "Indstillinger",
+  "applicationintegration": "Applikationsintegration",
   "dashboard": "Instrumentbræt",
   "timeTrackerSubHeading": "Vi sporer din skærmaktivitet for at hjælpe dig med at overvåge dit brug. Du kan optage og gennemgå din tid brugt på forskellige sider nedenfor.",
   "pageName": "Side navn",
@@ -130,6 +131,9 @@
   "Sent": "Sendt",
   "Draft": "Udvalg",
   "Spam": "Spam",
+  "Important":"Vigtigt",
+  "Starred": "Starred",
+  "Trash": "Skrape",
   "Compose": "Skab",
   "loginSuccess": "Log ind lykkedes",
   "loginFailed": "Login mislykkedes. Ugyldige legitimationsoplysninger",
@@ -143,5 +147,12 @@
   "joinCall": "Deltag i opkald",
   "roomID": "Rum ID",
   "callDetail": "Opkald detaljer",
-  "videoCall": "Video opkald"
+  "videoCall": "Video opkald",
+  "primaryEmail": "Primær e-mail",
+  "secondaryEmail": "Sekundær e-mail",
+  "phoneNumber": "Telefonnumre",
+  "noEmailFound": "Ingen e-mail fundet",
+  "noChatSelected": "Ingen chat valgt",
+  "noMessage": "eller besked mangler.",
+  "somethingWentWrong": "Noget gik galt"
 }

@@ -24,12 +24,13 @@ import { useNavigate } from 'react-router-dom';
 import { useThunkDispatch } from '../../Hooks/useThunkDispatch';
 import { useSelector } from 'react-redux';
 import { getUserData } from '../../Store/Selectors/AuthSelector';
-import { logout } from '../../Store/Thunk/AuthThunk';
 import { resetState } from '../../Store/Reducer/AuthSlice';
 // import { postTimeTracker } from '../../Store/Thunk/TimeTrackerThunk';
 import { MenuItemStyled, AvatarWrapper } from './styled';
 import { getActivityTrackerList } from '../../Store/Thunk/ActivityTrackerThunk';
-import { persistor } from '../../Store';
+import { TbSettingsCog } from 'react-icons/tb';
+import { CgProfile } from 'react-icons/cg';
+import { logout } from '../../Store/Thunk/AuthThunk';
 
 const MenuBar: React.FC = () => {
   const theme = useTheme();
@@ -67,11 +68,12 @@ const MenuBar: React.FC = () => {
     setSelectedItem(itemText);
 
     if (itemText === 'logout') {
-      setTimeout(() => {
-        dispatch(logout({ email: currentUserData?.email }));
-        dispatch(resetState());
-        showToast('success', 'Successfully logged out');
-      }, 1000);
+      // setTimeout(() => {
+      dispatch(logout());
+      dispatch(resetState());
+      showToast('success', 'Successfully logged out');
+      navigate('/login');
+      // }, 1000);
       return;
     }
 
@@ -180,15 +182,31 @@ const MenuBar: React.FC = () => {
                 onClick={() => handleCommonMenuItemClick('profile')}
                 sx={{ display: 'flex', gap: 2 }}
               >
+                <CgProfile size={24} color={Colors.applicationColor} />
+                {t('profile')}
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleCommonMenuItemClick('settings')}
+                sx={{ display: 'flex', gap: 2 }}
+              >
                 <IoSettings size={24} color={Colors.applicationColor} />
-                Settings
+                {t('settings')}
+              </MenuItem>
+              <MenuItem
+                onClick={() =>
+                  handleCommonMenuItemClick('application integration')
+                }
+                sx={{ display: 'flex', gap: 2 }}
+              >
+                <TbSettingsCog size={24} color={Colors.applicationColor} />
+                {t('applicationintegration')}
               </MenuItem>
               <MenuItem
                 onClick={() => handleCommonMenuItemClick('logout')}
                 sx={{ display: 'flex', gap: 2 }}
               >
                 <IoLogOut size={24} color={Colors.applicationColor} />
-                Logout
+                {t('logout')}
               </MenuItem>
             </Menu>
           </Toolbar>

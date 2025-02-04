@@ -13,7 +13,6 @@ export const useScreenTimeTrack = (location: boolean) => {
 
   const addScreenTimeEntry = (eventName: string, isLocation: boolean) => {
     if (!eventName) {
-      console.warn('Event name is required');
       return;
     }
 

@@ -1,30 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../Hooks/useAuth';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import HeaderMenuLayout from '../Components/HeaderMenuLayout';
+import { Spinner } from '../Components';
+import { useAuth } from '../Hooks/useAuth';
 
 const PrivateLayout = () => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const navigate = useNavigate();
-  const checkAuth = useAuth();
+  const { isAuthenticated, hasChecked } = useAuth();
 
-  useEffect(() => {
-    const authenticate = async () => {
-      const result = await checkAuth();
+  if (!hasChecked) {
+    return <Spinner size={40} />;
+  }
 
-      setLoading(false);
-
-      if (!result) {
-        navigate('/login');
-      }
-    };
-
-    authenticate();
-  }, [checkAuth, navigate]);
-
-  if (loading) {
-    return <div>Loading...</div>; // You can replace this with a loading spinner or any other loading indicator
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />; // ✅ Proper redirection
   }
 
   return (

@@ -37,7 +37,7 @@ export const CommunicationUserContainer = styled(Box)`
   border-right: 1px solid ${Colors.borderColor};
   height: 83vh;
   max-height: 83vh;
-  overflow-y: auto; // This will enable scrolling
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   padding: ${GenericStyle.tertiary_padding};
@@ -103,4 +103,12 @@ export const SearchContainer = styled(Box)`
   @media (min-width: 1280px) {
     width: 70%;
   }
+`;
+
+export const AllEmailButtonContainer = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 10px;
 `;

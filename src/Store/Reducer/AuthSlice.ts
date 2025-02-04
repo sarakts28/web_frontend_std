@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { loginApplication, logout } from '../Thunk/AuthThunk';
 import { AuthLoginState } from '../Types/AuthTypes';
 import Cookies from 'js-cookie';
+import { removeValueFromLocalStorage } from '../../Utilities/commonFunctions';
 
 const initialLoginState: AuthLoginState = {
   data: null,
@@ -19,8 +20,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     resetState: (state) => {
+      removeValueFromLocalStorage('isAuthenticated');
       Cookies.remove('AccessToken');
       Cookies.remove('RefreshToken');
+      Cookies.remove('DisplayInfo');
+      localStorage.removeItem('isAuthenticated');
       state.login = { ...initialLoginState };
     },
   },

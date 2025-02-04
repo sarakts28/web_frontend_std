@@ -17,6 +17,9 @@ import DropDownSelect from './Dropdown/Index';
 import NewVideoLink from './VideoLink';
 import DialingPad from './DailingPad';
 import InCall from './InCall/InCall';
+import PageNavigation from './PageNaviagtion';
+import GoogleButton from './GoogleAuthericationButton';
+import Spinner from './Spinner';
 export {
   ButtonField,
   InputField,
@@ -37,4 +40,7 @@ export {
   NewVideoLink,
   DialingPad,
   InCall,
+  PageNavigation,
+  GoogleButton,
+  Spinner,
 };
